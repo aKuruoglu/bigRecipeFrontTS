@@ -1,0 +1,23 @@
+.pagination li a {
+    width: 15px;
+    height: 15px;
+    border: 1px solid silver;
+    padding: 5px;
+    margin-right: 2px;
+}
+.active {
+    background-color: lightblue;
+}
+.previous {
+    margin-right: 5px;
+}
+.next {
+    margin-left: 5px;
+}
+.break-me a {
+
+}
+
+#react-paginate li {
+    display: inline-block;
+}
