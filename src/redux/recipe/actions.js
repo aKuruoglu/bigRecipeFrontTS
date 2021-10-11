@@ -15,10 +15,27 @@ export const getById = ( id ) => ( {
   },
 } );
 
+export const getRecipesByCategory = ( id, page, limit ) => ( {
+  type: actionTypes.GET_ALL_RECIPES_BY_CATEGORY,
+  payload: {
+    id,
+    page,
+    limit,
+  },
+} );
+
 export const updateRecipe = ( data ) => ( {
   type: actionTypes.UPDATE_RECIPE,
   payload: {
     data,
+  },
+} );
+
+export const updateRecipeCategory = ( id, catId ) => ( {
+  type: actionTypes.UPDATE_RECIPE_CATEGORY,
+  payload: {
+    id,
+    catId,
   },
 } );
 
@@ -35,3 +52,5 @@ export const deleteRecipe = ( id ) => ( {
     id,
   },
 } );
+
+

@@ -1,7 +1,7 @@
 /* eslint-disable no-param-reassign */
 import { createSlice } from '@reduxjs/toolkit';
 import { cloneDeep } from 'lodash';
-import { buildCategoryTree } from '../../utils/utils';
+import { buildCategoryTree, replaceKeysDeep } from '../../utils/utils';
 
 export const categorySlice = createSlice( {
   name: 'category',
@@ -15,7 +15,9 @@ export const categorySlice = createSlice( {
     setAllCategory: ( state, { payload } ) => {
       state.categories = payload;
       const cloneCategories = cloneDeep( state.categories );
-      state.categoriesTree = buildCategoryTree( payload );
+      const instead = { _id: 'key', name: 'label', children: 'nodes' };
+      const tree = buildCategoryTree( payload );
+      state.categoriesTree = replaceKeysDeep( tree, instead );
       state.breadCrumbsTree = buildCategoryTree( cloneCategories, false );
     },
     setCategoryById: ( state, { payload } ) => {

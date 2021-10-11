@@ -1,13 +1,16 @@
 import React from 'react';
 
 import { connect } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 import RecipeForm from '../../components/forms/RecipeForm';
 import WrapChanges from '../../components/WrapChanges';
 import { addRecipe } from '../../redux/recipe/actions';
 
-const RecipeAdd = () => {
+const RecipeAdd = ( { addRecipeCall } ) => {
+  const history = useHistory();
   const onSubmit = ( values ) => {
-    console.log( values );
+    addRecipeCall( values );
+    history.goBack();
   };
 
   return (

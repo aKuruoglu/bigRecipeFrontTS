@@ -1,3 +1,5 @@
+import { isObject, transform } from 'lodash';
+
 export const buildCategoryTree = ( array, tree = true ) => {
   const categoriesMap = array.reduce( ( mask, item ) => ( {
     ...mask,
@@ -33,9 +35,11 @@ export function hasChildren ( item ) {
     return false;
   }
 
-  if ( item.children.length === 0 ) {
-    return false;
-  }
-
-  return true;
+  return item.children.length !== 0;
 }
+
+export const replaceKeysDeep = ( obj, keysMap ) => transform( obj, ( result, value, key ) => {
+  const currentKey = keysMap[key] || key;
+  // eslint-disable-next-line no-param-reassign
+  result[currentKey] = isObject( value ) ? replaceKeysDeep( value, keysMap ) : value;
+} );

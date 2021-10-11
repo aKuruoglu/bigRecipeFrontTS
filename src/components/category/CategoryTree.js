@@ -1,20 +1,28 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import MenuItem from './components/MenuItem';
-import { getById } from '../../redux/category/action';
+import TreeMenu from 'react-simple-tree-menu';
+import 'react-simple-tree-menu/dist/main.css';
+import { getById } from '../../redux/recipe/actions';
 
-const CategoryTree = ( { categoryTree, getByIdCall } ) => {
-  const handleCategoryId = ( id ) => {
-    getByIdCall( id );
-  };
+const CategoryTree = ( { categoryTree, initialActiveKey, onClickItem = null } ) => {
+  let options = {};
+
+  if ( initialActiveKey ) {
+    const temp = initialActiveKey.split( '/' );
+    const initialOpenNodes = temp.splice( 0, temp.length - 1 ).join( '/' );
+    options = {
+      initialActiveKey,
+      initialOpenNodes,
+    };
+  }
+
   return (
-    <div>
-      {
-        categoryTree && categoryTree.map( ( item ) => (
-          <MenuItem item={ item } key={ item._id } action={ handleCategoryId } />
-        ) )
-      }
-    </div>
+    <TreeMenu
+      data={ categoryTree }
+      hasSearch={ false }
+      { ...options }
+      onClickItem={ onClickItem }
+    />
   );
 };
 

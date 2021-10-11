@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
-import { useParams } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 
 import { getById, updateRecipe } from '../../redux/recipe/actions';
 
@@ -10,6 +10,7 @@ import RecipeForm from '../../components/forms/RecipeForm';
 
 const RecipeEdit = ( { getByIdCall, recipeById, updateRecipeCall } ) => {
   const { id } = useParams();
+  const history = useHistory();
 
   useEffect( () => {
     getByIdCall( id );
@@ -17,6 +18,7 @@ const RecipeEdit = ( { getByIdCall, recipeById, updateRecipeCall } ) => {
 
   const onSubmit = ( values ) => {
     updateRecipeCall( values );
+    history.goBack();
   };
 
   return (

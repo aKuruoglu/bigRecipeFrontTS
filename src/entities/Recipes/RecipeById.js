@@ -28,9 +28,11 @@ const RecipeById = ( { getByIdCall, recipeById, deleteRecipeCall } ) => {
     deleteRecipeCall( id );
     history.push( '/recipe' );
   };
+
   const handleEdit = () => {
     history.push( `/recipe/edit/${ id }` );
   };
+
   return (
     <WrapChanges>
       <BreadCrumbs />

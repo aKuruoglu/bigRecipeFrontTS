@@ -2,6 +2,7 @@ import React from 'react';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Route, Switch } from 'react-router-dom';
+import 'react-sortable-tree/style.css';
 
 import WrapComponent from './components/WrapComponent';
 import NavBar from './components/NavBar';
@@ -25,7 +26,10 @@ function App () {
         <Route exact path="/recipe/add" component={ RecipeAdd } />
         <Route exact path="/recipe/:id" component={ RecipeById } />
         <Route exact path="/recipe" component={ Recipe } />
+        <Route exact path="/recipe/page/:page" component={ Recipe } />
         <Route exact path="/article" component={ Article } />
+        <Route exact path="/category/:catId" component={ Recipe } />
+        <Route exact path="/category/:catId/page/:page" component={ Recipe } />
         <Route exact path="/category" component={ Category } />
         <Route render={ () => <p>Not found</p> } />
       </Switch>
