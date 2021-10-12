@@ -1,21 +1,20 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
-import { useHistory, useParams } from 'react-router-dom';
+import { get } from 'lodash';
 import { Button } from 'react-bootstrap';
 import ReactPaginate from 'react-paginate';
-import { get } from 'lodash';
+import { useHistory, useParams } from 'react-router-dom';
 
+import './recipe.css';
+import config from '../../config';
 import WrapMain from '../../components/WrapMain';
 import RecipeItem from './components/RecipeItem';
 import { getAllRecipes, getRecipesByCategory } from '../../redux/recipe/actions';
-import './recipe.css';
-import config from '../../config';
 
 const { pageLimit } = config;
 
 const Recipe = ( { allRecipeCall, getRecipesByCategoryCall, allRecipes } ) => {
   const history = useHistory();
-
   const { catId, page = 1 } = useParams();
 
   const currentPage = +page - 1;

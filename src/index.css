@@ -11,3 +11,13 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+.crumbs {
+  cursor: pointer;
+}
+.arrowBack {
+  padding: 10px;
+  cursor: pointer;
+}
+
+
+

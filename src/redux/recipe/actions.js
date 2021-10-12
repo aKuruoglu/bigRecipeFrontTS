@@ -52,5 +52,3 @@ export const deleteRecipe = ( id ) => ( {
     id,
   },
 } );
-
-

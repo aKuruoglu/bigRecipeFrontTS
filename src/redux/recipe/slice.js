@@ -11,11 +11,14 @@ export const recipeSlice = createSlice( {
     setAllRecipes: ( state, { payload } ) => {
       state.allRecipes = payload;
     },
-    setById: ( state, { payload } ) => {
+    setRecipeById: ( state, { payload } ) => {
       state.recipeById = payload;
+    },
+    cleanStoreRecipes: ( state ) => {
+      state.allRecipes = null;
     },
   },
 } );
 
-export const { setAllRecipes, setById } = recipeSlice.actions;
+export const { setAllRecipes, setRecipeById, cleanStoreRecipes } = recipeSlice.actions;
 export default recipeSlice.reducer;

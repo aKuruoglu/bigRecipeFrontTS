@@ -1,41 +1,60 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
-  Button, ButtonGroup, DropdownButton, Dropdown,
+  Button, ButtonGroup, DropdownButton, Dropdown, Modal,
 } from 'react-bootstrap';
 import { useHistory } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { deleteRecipe } from '../../../redux/recipe/actions';
+import { cleanStoreRecipes } from '../../../redux/recipe/slice';
 
-const RecipeItem = ( { item, deleteRecipeCall } ) => {
+const RecipeItem = ( { item, deleteRecipeCall, cleanStoreRecipesCall } ) => {
   const history = useHistory();
-  const handleClick = ( id ) => {
+  const [show, setShow] = useState( false );
+
+  const moveToRecipeDetails = ( id ) => {
     history.push( `/recipe/${ id }` );
   };
   const moveChangeCategory = () => {
-    history.push( `/recipe/edit/category/${ item._id }` );
+    history.push( `/recipe/${ item._id }/edit/category` );
   };
   const moveEditRecipe = () => {
     history.push( `/recipe/edit/${ item._id }` );
   };
   const handleDeleteRecipe = () => {
     deleteRecipeCall( item._id );
+    setShow( false );
+    cleanStoreRecipesCall();
   };
 
+  const handleClose = () => setShow( false );
+  const handleShow = () => setShow( true );
+
   return (
-    <div className="card" onClick={ () => handleClick( item._id ) }>
+    <div className="card">
       <div className="card-body d-flex justify-content-between">
-        <div>
+        <div onClick={ () => moveToRecipeDetails( item._id ) } className="w-100">
           <h5 className="card-title">{item.title}</h5>
         </div>
         <div>
-          {/* <Button size="sm" onClick={ handleEdit }>Change category</Button> */}
-          {/* <Button size="sm" onClick={ handleEdit }>edit category</Button> */}
-          {/* <Button size="sm" onClick={ handleEdit }>edit category</Button> */}
           <DropdownButton as={ ButtonGroup } title="Actions" id="bg-nested-dropdown" onClick={ ( e ) => e.stopPropagation() }>
             <Dropdown.Item eventKey="1" onClick={ moveEditRecipe }>Edit Recipe</Dropdown.Item>
-            <Dropdown.Item eventKey="2" onClick={ handleDeleteRecipe }>Delete recipe</Dropdown.Item>
+            <Dropdown.Item eventKey="2" onClick={ handleShow }>Delete recipe</Dropdown.Item>
             <Dropdown.Item eventKey="2" onClick={ moveChangeCategory }>Change category</Dropdown.Item>
           </DropdownButton>
+          <Modal show={ show } onHide={ handleClose }>
+            <Modal.Header closeButton>
+              <Modal.Title>Editing deleting</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>Do you really want to delete the recipe?</Modal.Body>
+            <Modal.Footer>
+              <Button variant="secondary" onClick={ handleClose }>
+                Cancel
+              </Button>
+              <Button variant="primary" onClick={ handleDeleteRecipe }>
+                Save Changes
+              </Button>
+            </Modal.Footer>
+          </Modal>
         </div>
 
       </div>
@@ -45,4 +64,5 @@ const RecipeItem = ( { item, deleteRecipeCall } ) => {
 
 export default connect( null, {
   deleteRecipeCall: deleteRecipe,
+  cleanStoreRecipesCall: cleanStoreRecipes,
 } )( RecipeItem );

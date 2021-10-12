@@ -1,25 +1,38 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { get } from 'lodash';
+import { useHistory } from 'react-router-dom';
 
 const BreadCrumbs = ( { recipeById, crumbsArray } ) => {
+  const history = useHistory();
   const [bread, setBread] = useState();
+
+  const moveToCategoryId = useCallback( ( id ) => ( ) => {
+    history.push( `/category/${ id }` );
+  }, [history] );
+
   useEffect( () => {
     if ( !get( recipeById, 'categoryId', null ) ) {
       return;
     }
 
-    let category = crumbsArray.find( ( item ) => item._id === recipeById.categoryId );
+    let category = crumbsArray[recipeById.categoryId];
     const res = [];
 
     while ( category ) {
-      res.unshift( ( <div key={ category._id } className="breadcrumb-item">{category.name}</div> ) );
+      res.unshift( ( <div
+        key={ category._id }
+        className="breadcrumb-item crumbs"
+        onClick={ moveToCategoryId( category._id ) }
+      >
+        {category.name}
+      </div> ) );
 
       category = category.parent;
     }
 
     setBread( res );
-  }, [crumbsArray, recipeById] );
+  }, [crumbsArray, moveToCategoryId, recipeById] );
   return (
     <div className="d-flex mt-2 breadcrumb">
       {bread}

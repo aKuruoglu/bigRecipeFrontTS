@@ -6,13 +6,13 @@ import { useParams } from 'react-router-dom';
 import SelectCategory from './SelectCategory';
 import Input from './Input';
 
-const RecipeForm = ( { recipeById = {}, onSubmit } ) => {
+const RecipeForm = ( { currentRecipe = {}, onSubmit } ) => {
   const { id } = useParams();
 
   return (
     <Form
       onSubmit={ onSubmit }
-      initialValues={ { ...recipeById } }
+      initialValues={ { ...currentRecipe } }
       validate={ ( values ) => {
         const errors = {};
         if ( !values.title ) {
@@ -21,8 +21,10 @@ const RecipeForm = ( { recipeById = {}, onSubmit } ) => {
         if ( !values.description ) {
           errors.description = 'Required';
         }
-        if ( !values.categoryId ) {
-          errors.categoryId = 'isRequired';
+        if ( currentRecipe.categoryId ) {
+          if ( !values.categoryId ) {
+            errors.categoryId = 'isRequired';
+          }
         }
         return errors;
       } }
@@ -30,18 +32,17 @@ const RecipeForm = ( { recipeById = {}, onSubmit } ) => {
         <form onSubmit={ handleSubmit }>
           <div className="mb-3">
             <label>Title</label>
-            <Field name="title" component={ Input } defaultValue={ recipeById.title } />
+            <Field name="title" component={ Input } defaultValue={ currentRecipe.title } />
           </div>
           <div className="mb-3">
             <label>Description</label>
-            <Field name="description" component={ Input } defaultValue={ recipeById.description } />
+            <Field name="description" component={ Input } defaultValue={ currentRecipe.description } />
           </div>
           {!id && (
           <div className="mb-3  align-items-center">
             <Field name="categoryId" component={ SelectCategory } />
           </div>
           )}
-
           <Button type="submit">Save</Button>
         </form>
       ) }

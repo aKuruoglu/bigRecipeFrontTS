@@ -1,14 +1,13 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
-import { useHistory, useParams } from 'react-router-dom';
 import { Button } from 'react-bootstrap';
+import { useHistory, useParams } from 'react-router-dom';
 
+import WrapSimple from '../../components/WrapSimple';
+import BreadCrumbs from '../../components/BreadCrumbs';
 import { deleteRecipe, getById } from '../../redux/recipe/actions';
 
-import WrapChanges from '../../components/WrapChanges';
-import BreadCrumbs from '../../components/BreadCrumbs';
-
-const RecipeById = ( { getByIdCall, recipeById, deleteRecipeCall } ) => {
+const RecipeById = ( { getByIdCall, currentRecipe, deleteRecipeCall } ) => {
   const { id } = useParams();
   const history = useHistory();
 
@@ -16,13 +15,13 @@ const RecipeById = ( { getByIdCall, recipeById, deleteRecipeCall } ) => {
     getByIdCall( id );
   }, [getByIdCall, id] );
 
-  if ( !recipeById ) {
+  if ( !currentRecipe ) {
     return null;
   }
 
   const {
     _id, categoryId, title, description,
-  } = recipeById;
+  } = currentRecipe;
 
   const handleDelete = () => {
     deleteRecipeCall( id );
@@ -34,7 +33,7 @@ const RecipeById = ( { getByIdCall, recipeById, deleteRecipeCall } ) => {
   };
 
   return (
-    <WrapChanges>
+    <WrapSimple>
       <BreadCrumbs />
       <div className="card p-2">
         <span>
@@ -58,12 +57,12 @@ const RecipeById = ( { getByIdCall, recipeById, deleteRecipeCall } ) => {
         <Button className="btn-warning mt-2" onClick={ handleEdit }>Edit Recipe</Button>
         <Button className="btn-danger mt-2" onClick={ handleDelete }>Delete</Button>
       </div>
-    </WrapChanges>
+    </WrapSimple>
   );
 };
 
 export default connect( ( state ) => ( {
-  recipeById: state.recipe.recipeById,
+  currentRecipe: state.recipe.recipeById,
 } ), {
   getByIdCall: getById,
   deleteRecipeCall: deleteRecipe,

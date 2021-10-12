@@ -1,27 +1,40 @@
-import React from 'react';
-import { useHistory } from 'react-router-dom';
+import React, { useCallback } from 'react';
 import { connect } from 'react-redux';
+import { useHistory, useParams } from 'react-router-dom';
+
 import CategoryTree from './category/CategoryTree';
 import { getRecipesByCategory } from '../redux/recipe/actions';
 
-const WrapMain = ( { children } ) => {
+const WrapMain = ( { children, crumbsMap } ) => {
   const history = useHistory();
+  const { catId } = useParams();
 
-  const handleClick = ( { key } ) => {
+  const handleClick = useCallback( ( { key } ) => {
     const sendKey = key
       .split( '/' )
       .pop();
     history.push( `/category/${ sendKey }` );
-  };
+  }, [history] );
+
+  const res = [];
+  if ( catId ) {
+    let category = crumbsMap[catId];
+
+    while ( category ) {
+      res.unshift( category._id );
+      category = category.parent;
+    }
+  }
+
   return (
-    <div className="container h-100">
+    <div className="container-md h-100">
       <div className="row h-100">
 
-        <nav className="col-md-3">
-          <CategoryTree onClickItem={ handleClick } />
+        <nav className="col-lg-4 col-md-5 col-sm-6">
+          <CategoryTree onClickItem={ handleClick } initialActiveKey={ res.join( '/' ) } />
         </nav>
 
-        <main className="col-md-9">
+        <main className="col-lg-8 col-md-7 col-sm-6">
           { children }
         </main>
 
@@ -30,6 +43,8 @@ const WrapMain = ( { children } ) => {
   );
 };
 
-export default connect( null, {
+export default connect( ( state ) => ( {
+  crumbsMap: state.category.breadCrumbsTree,
+} ), {
   getRecipesByCategoryCall: getRecipesByCategory,
 } )( WrapMain );

@@ -1,11 +1,19 @@
 import React, { useState } from 'react';
 import { Button } from 'react-bootstrap';
+
 import CategoryTree from '../category/CategoryTree';
 
 const SelectCategory = ( { meta, input } ) => {
   const [isOpenTree, setIsOpenTree] = useState( false );
   const [category, setCategory] = useState( {} );
   const { label } = category;
+
+  const handleAddCategory = ( cat ) => {
+    const temp = cat.key.split( '/' );
+    input.onChange( temp[temp.length - 1] );
+    setCategory( cat );
+    setIsOpenTree();
+  };
 
   return (
     <div className="flex-column">
@@ -26,12 +34,7 @@ const SelectCategory = ( { meta, input } ) => {
             </Button>
           )
           : (
-            <CategoryTree onClickItem={ ( cat ) => {
-              input.onChange( cat.key );
-              setCategory( cat );
-              setIsOpenTree();
-            } }
-            />
+            <CategoryTree onClickItem={ handleAddCategory } />
           )}
 
       </div>

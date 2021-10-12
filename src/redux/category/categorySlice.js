@@ -8,7 +8,7 @@ export const categorySlice = createSlice( {
   initialState: {
     categories: [],
     categoriesTree: [],
-    breadCrumbsTree: [],
+    breadCrumbsTree: {},
     categoryById: {},
   },
   reducers: {
@@ -18,7 +18,11 @@ export const categorySlice = createSlice( {
       const instead = { _id: 'key', name: 'label', children: 'nodes' };
       const tree = buildCategoryTree( payload );
       state.categoriesTree = replaceKeysDeep( tree, instead );
-      state.breadCrumbsTree = buildCategoryTree( cloneCategories, false );
+      const crumbs = buildCategoryTree( cloneCategories, false );
+      state.breadCrumbsTree = crumbs.reduce( ( mask, item ) => ( {
+        ...mask,
+        [item._id]: item,
+      } ), {} );
     },
     setCategoryById: ( state, { payload } ) => {
       state.categoryById = payload;

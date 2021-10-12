@@ -1,11 +1,10 @@
 import React from 'react';
-import './App.css';
+import 'react-sortable-tree/style.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Route, Switch } from 'react-router-dom';
-import 'react-sortable-tree/style.css';
+import './App.css';
 
 import WrapComponent from './components/WrapComponent';
-import NavBar from './components/NavBar';
 import Home from './entities/Home';
 import Recipe from './entities/Recipes/Recipe';
 import Article from './entities/Articles/Article';
@@ -18,10 +17,9 @@ import RecipeEditCategory from './entities/Recipes/RecipeEditCategory';
 function App () {
   return (
     <WrapComponent>
-      <NavBar />
       <Switch>
         <Route exact path="/" component={ Home } />
-        <Route exact path="/recipe/edit/category/:id" component={ RecipeEditCategory } />
+        <Route exact path="/recipe/:id/edit/category" component={ RecipeEditCategory } />
         <Route exact path="/recipe/edit/:id" component={ RecipeEdit } />
         <Route exact path="/recipe/add" component={ RecipeAdd } />
         <Route exact path="/recipe/:id" component={ RecipeById } />

@@ -9,7 +9,7 @@ import {
   getRecipesByCategoryApi, updateRecipeCategoryApi,
 } from '../../api/apiRecipe';
 import actionTypes from './actionTypes';
-import { setAllRecipes, setById } from './slice';
+import { setAllRecipes, setRecipeById } from './slice';
 
 export function* fetchRecipesSaga ( { payload } ) {
   try {
@@ -19,15 +19,17 @@ export function* fetchRecipesSaga ( { payload } ) {
     yield put( { type: 'TODO_FETCH_FAILED' } );
   }
 }
+
 export function* fetchRecipesByIdSaga ( { payload } ) {
   try {
-    yield put( setById( null ) );
+    yield put( setRecipeById( null ) );
     const result = yield call( getRecipeByIdApi, payload );
-    yield put( setById( result.data ) );
+    yield put( setRecipeById( result.data ) );
   } catch ( e ) {
     yield put( { type: 'TODO_FETCH_FAILED' } );
   }
 }
+
 export function* fetchRecipesByCategorySaga ( { payload } ) {
   try {
     const result = yield call( getRecipesByCategoryApi, payload );
@@ -36,6 +38,7 @@ export function* fetchRecipesByCategorySaga ( { payload } ) {
     yield put( { type: 'TODO_FETCH_FAILED' } );
   }
 }
+
 export function* updateRecipeByIdSaga ( { payload } ) {
   try {
     yield call( updateRecipeApi, payload );
@@ -47,7 +50,7 @@ export function* updateRecipeByIdSaga ( { payload } ) {
 export function* updateRecipeCategorySaga ( { payload } ) {
   try {
     const result = yield call( updateRecipeCategoryApi, payload );
-    yield put( setById( result.data ) );
+    yield put( setRecipeById( result.data ) );
   } catch ( e ) {
     yield put( { type: 'TODO_FETCH_FAILED' } );
   }
@@ -60,6 +63,7 @@ export function* addRecipeByIdSaga ( { payload } ) {
     yield put( { type: 'TODO_FETCH_FAILED' } );
   }
 }
+
 export function* deleteRecipeSaga ( { payload } ) {
   try {
     yield call( deleteRecipeApi, payload );
