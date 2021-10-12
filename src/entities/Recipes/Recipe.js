@@ -6,15 +6,19 @@ import ReactPaginate from 'react-paginate';
 import { useHistory, useParams } from 'react-router-dom';
 
 import './recipe.css';
-import config from '../../config';
+import { pageLimit } from '../../config';
 import WrapMain from '../../components/WrapMain';
 import RecipeItem from './components/RecipeItem';
-import { getAllRecipes, getRecipesByCategory } from '../../redux/recipe/actions';
+import {
+  deleteRecipe, getAllRecipes, getRecipesByCategory,
+} from '../../redux/recipe/actions';
+import { cleanStoreRecipes } from '../../redux/recipe/slice';
 
-const { pageLimit } = config;
-
-const Recipe = ( { allRecipeCall, getRecipesByCategoryCall, allRecipes } ) => {
+const Recipe = ( {
+  allRecipeCall, getRecipesByCategoryCall, allRecipes, deleteRecipeCall, cleanStoreRecipesCall,
+} ) => {
   const history = useHistory();
+  const name = 'recipe';
   const { catId, page = 1 } = useParams();
 
   const currentPage = +page - 1;
@@ -22,12 +26,12 @@ const Recipe = ( { allRecipeCall, getRecipesByCategoryCall, allRecipes } ) => {
   const changePage = ( { selected } ) => {
     const pageNumber = +selected + 1;
     if ( pageNumber !== +page ) {
-      history.push( `/recipe/page/${ pageNumber }` );
+      history.push( `/${name}/page/${ pageNumber }` );
     }
   };
 
   const moveToAddPage = () => {
-    history.push( '/recipe/add' );
+    history.push( `/${name}/add` );
   };
 
   useEffect( () => {
@@ -55,13 +59,21 @@ const Recipe = ( { allRecipeCall, getRecipesByCategoryCall, allRecipes } ) => {
   }
 
   return (
-    <WrapMain>
+    <WrapMain entity={name}>
       <div className="p-2">
         <Button onClick={ moveToAddPage }>Add recipe</Button>
       </div>
       <div>
         {get( entities, 'length', 0 ) > 0
-          ? entities.map( ( item ) => <RecipeItem item={ item } key={ item._id } /> )
+          ? entities.map( ( item ) => (
+            <RecipeItem
+              item={ item }
+              key={ item._id }
+              entity={ name }
+              deleteEntityCall={ deleteRecipeCall }
+              cleanStoreEntityCall={ cleanStoreRecipesCall }
+            />
+          ) )
           : <p className="text-center mb-5">Data do not exist</p>}
       </div>
       <div className="mt-3 d-flex justify-content-center">
@@ -90,4 +102,6 @@ export default connect( ( state ) => ( {
 } ), {
   allRecipeCall: getAllRecipes,
   getRecipesByCategoryCall: getRecipesByCategory,
+  deleteRecipeCall: deleteRecipe,
+  cleanStoreRecipesCall: cleanStoreRecipes,
 } )( Recipe );

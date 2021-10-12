@@ -25,9 +25,12 @@ function App () {
         <Route exact path="/recipe/:id" component={ RecipeById } />
         <Route exact path="/recipe" component={ Recipe } />
         <Route exact path="/recipe/page/:page" component={ Recipe } />
+        <Route exact path="/article/category/:catId/page/:page" component={ Article } />
+        <Route exact path="/article/category/:catId" component={ Article } />
+        <Route exact path="/article/page/:page" component={ Article } />
         <Route exact path="/article" component={ Article } />
-        <Route exact path="/category/:catId" component={ Recipe } />
-        <Route exact path="/category/:catId/page/:page" component={ Recipe } />
+        <Route exact path="/recipe/category/:catId" component={ Recipe } />
+        <Route exact path="/recipe/category/:catId/page/:page" component={ Recipe } />
         <Route exact path="/category" component={ Category } />
         <Route render={ () => <p>Not found</p> } />
       </Switch>

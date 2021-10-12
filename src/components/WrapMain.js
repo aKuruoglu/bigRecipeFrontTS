@@ -1,20 +1,24 @@
 import React, { useCallback } from 'react';
 import { connect } from 'react-redux';
-import { useHistory, useParams } from 'react-router-dom';
+import {
+  useHistory, useLocation, useParams, useRouteMatch,
+} from 'react-router-dom';
 
 import CategoryTree from './category/CategoryTree';
 import { getRecipesByCategory } from '../redux/recipe/actions';
 
-const WrapMain = ( { children, crumbsMap } ) => {
+const WrapMain = ( { children, crumbsMap, entity } ) => {
   const history = useHistory();
+  const match = useRouteMatch( `/${ entity }/*/*` );
+  console.log( match );
   const { catId } = useParams();
 
   const handleClick = useCallback( ( { key } ) => {
     const sendKey = key
       .split( '/' )
       .pop();
-    history.push( `/category/${ sendKey }` );
-  }, [history] );
+    history.push( `/${ entity }/category/${ sendKey }` );
+  }, [entity, history] );
 
   const res = [];
   if ( catId ) {

@@ -3,27 +3,25 @@ import {
   Button, ButtonGroup, DropdownButton, Dropdown, Modal,
 } from 'react-bootstrap';
 import { useHistory } from 'react-router-dom';
-import { connect } from 'react-redux';
-import { deleteRecipe } from '../../../redux/recipe/actions';
-import { cleanStoreRecipes } from '../../../redux/recipe/slice';
 
-const RecipeItem = ( { item, deleteRecipeCall, cleanStoreRecipesCall } ) => {
+const RecipeItem = ( {
+  item, deleteEntityCall, cleanStoreEntityCall, entity,
+} ) => {
   const history = useHistory();
   const [show, setShow] = useState( false );
 
-  const moveToRecipeDetails = ( id ) => {
-    history.push( `/recipe/${ id }` );
+  const moveToEntityDetails = ( id ) => {
+    history.push( `/${ entity }/${ id }` );
   };
   const moveChangeCategory = () => {
-    history.push( `/recipe/${ item._id }/edit/category` );
+    history.push( `/${ entity }/${ item._id }/edit/category` );
   };
   const moveEditRecipe = () => {
-    history.push( `/recipe/edit/${ item._id }` );
+    history.push( `/${ entity }/edit/${ item._id }` );
   };
   const handleDeleteRecipe = () => {
-    deleteRecipeCall( item._id );
+    deleteEntityCall( item._id );
     setShow( false );
-    cleanStoreRecipesCall();
   };
 
   const handleClose = () => setShow( false );
@@ -32,7 +30,7 @@ const RecipeItem = ( { item, deleteRecipeCall, cleanStoreRecipesCall } ) => {
   return (
     <div className="card">
       <div className="card-body d-flex justify-content-between">
-        <div onClick={ () => moveToRecipeDetails( item._id ) } className="w-100">
+        <div onClick={ () => moveToEntityDetails( item._id ) } className="w-100">
           <h5 className="card-title">{item.title}</h5>
         </div>
         <div>
@@ -45,7 +43,11 @@ const RecipeItem = ( { item, deleteRecipeCall, cleanStoreRecipesCall } ) => {
             <Modal.Header closeButton>
               <Modal.Title>Editing deleting</Modal.Title>
             </Modal.Header>
-            <Modal.Body>Do you really want to delete the recipe?</Modal.Body>
+            <Modal.Body>
+              Do you really want to delete the
+              {entity}
+              ?
+            </Modal.Body>
             <Modal.Footer>
               <Button variant="secondary" onClick={ handleClose }>
                 Cancel
@@ -62,7 +64,4 @@ const RecipeItem = ( { item, deleteRecipeCall, cleanStoreRecipesCall } ) => {
   );
 };
 
-export default connect( null, {
-  deleteRecipeCall: deleteRecipe,
-  cleanStoreRecipesCall: cleanStoreRecipes,
-} )( RecipeItem );
+export default RecipeItem;
