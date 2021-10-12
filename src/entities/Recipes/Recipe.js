@@ -8,7 +8,7 @@ import { useHistory, useParams } from 'react-router-dom';
 import './recipe.css';
 import { pageLimit } from '../../config';
 import WrapMain from '../../components/WrapMain';
-import RecipeItem from './components/RecipeItem';
+import EntityItem from '../../components/EntityItem';
 import {
   deleteRecipe, getAllRecipes, getRecipesByCategory,
 } from '../../redux/recipe/actions';
@@ -26,12 +26,16 @@ const Recipe = ( {
   const changePage = ( { selected } ) => {
     const pageNumber = +selected + 1;
     if ( pageNumber !== +page ) {
-      history.push( `/${name}/page/${ pageNumber }` );
+      if ( !catId ) {
+        history.push( `/${ name }/page/${ pageNumber }` );
+      } else {
+        history.push( `/${ name }/category/${ catId }/page/${ pageNumber }` );
+      }
     }
   };
 
   const moveToAddPage = () => {
-    history.push( `/${name}/add` );
+    history.push( `/${ name }/add` );
   };
 
   useEffect( () => {
@@ -59,14 +63,14 @@ const Recipe = ( {
   }
 
   return (
-    <WrapMain entity={name}>
+    <WrapMain entity={ name }>
       <div className="p-2">
         <Button onClick={ moveToAddPage }>Add recipe</Button>
       </div>
       <div>
         {get( entities, 'length', 0 ) > 0
           ? entities.map( ( item ) => (
-            <RecipeItem
+            <EntityItem
               item={ item }
               key={ item._id }
               entity={ name }

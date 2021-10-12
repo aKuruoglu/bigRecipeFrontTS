@@ -5,21 +5,21 @@ import { useHistory, useParams, useRouteMatch } from 'react-router-dom';
 
 import { Button, Modal } from 'react-bootstrap';
 import CategoryTree from '../../components/category/CategoryTree';
-import { getById, updateRecipeCategory } from '../../redux/recipe/actions';
+import { getById, updateArticleCategory } from '../../redux/article/actions';
+import WrapSimple from '../../components/WrapSimple';
 
-const RecipeEditCategory = ( {
+const ArticleEditCategory = ( {
   categoryId,
   getByIdCall,
   crumbsMap,
-  updateRecipeCategoryCall,
+  updateArticleCategoryCall,
 } ) => {
-  const { id } = useParams();
   const history = useHistory();
-
+  const [catId, setCatId] = useState( null );
   const { path } = useRouteMatch();
   const entity = path.split( '/' );
 
-  const [catId, setCatId] = useState( null );
+  const { id } = useParams();
 
   useEffect( () => {
     getByIdCall( id );
@@ -50,12 +50,12 @@ const RecipeEditCategory = ( {
     const sendKey = catId
       .split( '/' )
       .pop();
-    updateRecipeCategoryCall( id, sendKey );
+    updateArticleCategoryCall( id, sendKey );
     history.push( `/${ entity[1] }` );
   };
 
   return (
-    <>
+    <WrapSimple>
       <CategoryTree initialActiveKey={ res.join( '/' ) } onClickItem={ handleShow } />
       <Modal show={ !!catId } onHide={ handleClose }>
         <Modal.Header closeButton>
@@ -71,15 +71,15 @@ const RecipeEditCategory = ( {
           </Button>
         </Modal.Footer>
       </Modal>
-    </>
+    </WrapSimple>
 
   );
 };
 
 export default connect( ( state ) => ( {
-  categoryId: get( state, 'recipe.recipeById.categoryId' ),
+  categoryId: get( state, 'article.recipeById.categoryId' ),
   crumbsMap: state.category.breadCrumbsTree,
 } ), {
   getByIdCall: getById,
-  updateRecipeCategoryCall: updateRecipeCategory,
-} )( RecipeEditCategory );
+  updateArticleCategoryCall: updateArticleCategory,
+} )( ArticleEditCategory );

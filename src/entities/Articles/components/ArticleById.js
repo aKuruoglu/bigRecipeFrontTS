@@ -1,36 +1,35 @@
 import React, { useEffect } from 'react';
-import { connect } from 'react-redux';
-import { Button } from 'react-bootstrap';
 import { useHistory, useParams } from 'react-router-dom';
+import { Button } from 'react-bootstrap';
+import { connect } from 'react-redux';
+import WrapSimple from '../../../components/WrapSimple';
+import BreadCrumbs from '../../../components/BreadCrumbs';
+import { deleteArticle, getById } from '../../../redux/article/actions';
 
-import WrapSimple from '../../components/WrapSimple';
-import BreadCrumbs from '../../components/BreadCrumbs';
-import { deleteRecipe, getById } from '../../redux/recipe/actions';
-
-const RecipeById = ( { getByIdCall, currentRecipe, deleteRecipeCall } ) => {
+const ArticleById = ( { getByIdCall, deleteArticleCall, currentArticle } ) => {
   const { id } = useParams();
   const history = useHistory();
-  const name = 'recipe';
+  const name = 'article';
 
   useEffect( () => {
     getByIdCall( id );
   }, [getByIdCall, id] );
 
-  if ( !currentRecipe ) {
+  if ( !currentArticle ) {
     return null;
   }
 
   const {
-    _id, categoryId, title, description,
-  } = currentRecipe;
+    _id, categoryId, title, description, mainText,
+  } = currentArticle;
 
   const handleDelete = () => {
-    deleteRecipeCall( id );
-    history.push( '/recipe' );
+    deleteArticleCall( id );
+    history.push( '/article' );
   };
 
   const handleEdit = () => {
-    history.push( `/recipe/edit/${ id }` );
+    history.push( `/article/edit/${ id }` );
   };
 
   return (
@@ -50,12 +49,16 @@ const RecipeById = ( { getByIdCall, currentRecipe, deleteRecipeCall } ) => {
           {description}
         </span>
         <span>
+          Text:
+          {mainText}
+        </span>
+        <span>
           categoryId:
           {categoryId}
         </span>
       </div>
       <div className="d-flex justify-content-end">
-        <Button className="btn-warning mt-2" onClick={ handleEdit }>Edit Recipe</Button>
+        <Button className="btn-warning mt-2" onClick={ handleEdit }>Edit Article</Button>
         <Button className="btn-danger mt-2" onClick={ handleDelete }>Delete</Button>
       </div>
     </WrapSimple>
@@ -63,8 +66,8 @@ const RecipeById = ( { getByIdCall, currentRecipe, deleteRecipeCall } ) => {
 };
 
 export default connect( ( state ) => ( {
-  currentRecipe: state.recipe.recipeById,
+  currentArticle: state.article.articleById,
 } ), {
   getByIdCall: getById,
-  deleteRecipeCall: deleteRecipe,
-} )( RecipeById );
+  deleteArticleCall: deleteArticle,
+} )( ArticleById );

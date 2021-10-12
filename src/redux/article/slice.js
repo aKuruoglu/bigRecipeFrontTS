@@ -12,10 +12,10 @@ export const articleSlice = createSlice( {
       state.allArticles = payload;
     },
     setArticleById: ( state, { payload } ) => {
-      state.recipeById = payload;
+      state.articleById = payload;
     },
     cleanStoreArticles: ( state ) => {
-      state.allRecipes = null;
+      state.allArticles = null;
     },
   },
 } );

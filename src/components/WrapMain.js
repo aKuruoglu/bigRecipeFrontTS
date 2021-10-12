@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react';
 import { connect } from 'react-redux';
 import {
-  useHistory, useLocation, useParams, useRouteMatch,
+  useHistory, useParams,
 } from 'react-router-dom';
 
 import CategoryTree from './category/CategoryTree';
@@ -9,8 +9,6 @@ import { getRecipesByCategory } from '../redux/recipe/actions';
 
 const WrapMain = ( { children, crumbsMap, entity } ) => {
   const history = useHistory();
-  const match = useRouteMatch( `/${ entity }/*/*` );
-  console.log( match );
   const { catId } = useParams();
 
   const handleClick = useCallback( ( { key } ) => {

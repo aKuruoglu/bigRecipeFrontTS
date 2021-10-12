@@ -3,19 +3,19 @@ import { connect } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 
 import WrapSimple from '../../components/WrapSimple';
-import { addRecipe } from '../../redux/recipe/actions';
-import RecipeForm from './components/RecipeForm';
+import { addArticle } from '../../redux/article/actions';
+import ArticleForm from './components/ArticleForm';
 
-const RecipeAdd = ( { addRecipeCall } ) => {
+const RecipeAdd = ( { addArticleCall } ) => {
   const history = useHistory();
   const onSubmit = ( values ) => {
-    addRecipeCall( values );
-    history.push( '/recipe' );
+    addArticleCall( values );
+    history.push( '/article' );
   };
 
   return (
     <WrapSimple>
-      <RecipeForm
+      <ArticleForm
         onSubmit={ onSubmit }
       />
     </WrapSimple>
@@ -23,5 +23,5 @@ const RecipeAdd = ( { addRecipeCall } ) => {
 };
 
 export default connect( null, {
-  addRecipeCall: addRecipe,
+  addArticleCall: addArticle,
 } )( RecipeAdd );

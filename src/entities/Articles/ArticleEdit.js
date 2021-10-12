@@ -1,14 +1,13 @@
 import React, { useEffect } from 'react';
+import { useHistory, useParams } from 'react-router-dom';
 import { omit } from 'lodash';
 import { connect } from 'react-redux';
-import { useHistory, useParams } from 'react-router-dom';
-
 import WrapSimple from '../../components/WrapSimple';
 import BreadCrumbs from '../../components/BreadCrumbs';
-import RecipeForm from './components/RecipeForm';
-import { getById, updateRecipe } from '../../redux/recipe/actions';
+import { getById, updateArticle } from '../../redux/article/actions';
+import ArticleForm from './components/ArticleForm';
 
-const RecipeEdit = ( { getByIdCall, currentRecipe, updateRecipeCall } ) => {
+const ArticleEdit = ( { currentArticle, updateArticleCall, getByIdCall } ) => {
   const { id } = useParams();
   const history = useHistory();
 
@@ -17,19 +16,19 @@ const RecipeEdit = ( { getByIdCall, currentRecipe, updateRecipeCall } ) => {
   }, [getByIdCall, id] );
 
   const onSubmit = ( values ) => {
-    updateRecipeCall( values );
-    history.push( `/recipe/${ id }` );
+    updateArticleCall( values );
+    history.push( `/article/${ id }` );
   };
 
-  if ( !currentRecipe ) {
+  if ( !currentArticle ) {
     return null;
   }
 
   return (
     <WrapSimple>
       <BreadCrumbs />
-      <RecipeForm
-        currentRecipe={ omit( currentRecipe, ['categoryId'] ) }
+      <ArticleForm
+        currentArticle={ omit( currentArticle, ['categoryId'] ) }
         onSubmit={ onSubmit }
       />
     </WrapSimple>
@@ -37,8 +36,8 @@ const RecipeEdit = ( { getByIdCall, currentRecipe, updateRecipeCall } ) => {
 };
 
 export default connect( ( state ) => ( {
-  currentRecipe: state.recipe.recipeById,
+  currentArticle: state.article.articleById,
 } ), {
   getByIdCall: getById,
-  updateRecipeCall: updateRecipe,
-} )( RecipeEdit );
+  updateArticleCall: updateArticle,
+} )( ArticleEdit );

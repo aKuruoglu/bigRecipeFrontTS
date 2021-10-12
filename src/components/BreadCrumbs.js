@@ -3,20 +3,20 @@ import { connect } from 'react-redux';
 import { get } from 'lodash';
 import { useHistory } from 'react-router-dom';
 
-const BreadCrumbs = ( { recipeById, crumbsArray } ) => {
+const BreadCrumbs = ( { entityById, crumbsArray, entity } ) => {
   const history = useHistory();
   const [bread, setBread] = useState();
 
   const moveToCategoryId = useCallback( ( id ) => ( ) => {
-    history.push( `/category/${ id }` );
-  }, [history] );
+    history.push( `/${ entity }/category/${ id }` );
+  }, [entity, history] );
 
   useEffect( () => {
-    if ( !get( recipeById, 'categoryId', null ) ) {
+    if ( !get( entityById, 'categoryId', null ) ) {
       return;
     }
 
-    let category = crumbsArray[recipeById.categoryId];
+    let category = crumbsArray[entityById.categoryId];
     const res = [];
 
     while ( category ) {
@@ -32,7 +32,7 @@ const BreadCrumbs = ( { recipeById, crumbsArray } ) => {
     }
 
     setBread( res );
-  }, [crumbsArray, moveToCategoryId, recipeById] );
+  }, [crumbsArray, moveToCategoryId, entityById] );
   return (
     <div className="d-flex mt-2 breadcrumb">
       {bread}
@@ -40,7 +40,7 @@ const BreadCrumbs = ( { recipeById, crumbsArray } ) => {
   );
 };
 
-export default connect( ( state ) => ( {
-  recipeById: state.recipe.recipeById,
+export default connect( ( state, { entity } ) => ( {
+  entityById: get( state, `${ entity }.${ entity }ById` ),
   crumbsArray: state.category.breadCrumbsTree,
 } ), null )( BreadCrumbs );

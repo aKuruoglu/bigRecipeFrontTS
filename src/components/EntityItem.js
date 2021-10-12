@@ -4,8 +4,8 @@ import {
 } from 'react-bootstrap';
 import { useHistory } from 'react-router-dom';
 
-const RecipeItem = ( {
-  item, deleteEntityCall, cleanStoreEntityCall, entity,
+const EntityItem = ( {
+  item, deleteEntityCall, entity,
 } ) => {
   const history = useHistory();
   const [show, setShow] = useState( false );
@@ -35,8 +35,16 @@ const RecipeItem = ( {
         </div>
         <div>
           <DropdownButton as={ ButtonGroup } title="Actions" id="bg-nested-dropdown" onClick={ ( e ) => e.stopPropagation() }>
-            <Dropdown.Item eventKey="1" onClick={ moveEditRecipe }>Edit Recipe</Dropdown.Item>
-            <Dropdown.Item eventKey="2" onClick={ handleShow }>Delete recipe</Dropdown.Item>
+            <Dropdown.Item eventKey="1" onClick={ moveEditRecipe }>
+              Edit
+              {' '}
+              { entity }
+            </Dropdown.Item>
+            <Dropdown.Item eventKey="2" onClick={ handleShow }>
+              Delete
+              {' '}
+              { entity }
+            </Dropdown.Item>
             <Dropdown.Item eventKey="2" onClick={ moveChangeCategory }>Change category</Dropdown.Item>
           </DropdownButton>
           <Modal show={ show } onHide={ handleClose }>
@@ -64,4 +72,4 @@ const RecipeItem = ( {
   );
 };
 
-export default RecipeItem;
+export default EntityItem;

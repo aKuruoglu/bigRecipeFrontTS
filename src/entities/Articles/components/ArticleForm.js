@@ -3,16 +3,16 @@ import { Field, Form } from 'react-final-form';
 import { Button } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import SelectCategory from './SelectCategory';
-import Input from './Input';
+import SelectCategory from '../../../components/forms/SelectCategory';
+import Input from '../../../components/forms/Input';
 
-const RecipeForm = ( { currentRecipe = {}, onSubmit } ) => {
+const ArticleForm = ( { currentArticle = {}, onSubmit } ) => {
   const { id } = useParams();
 
   return (
     <Form
       onSubmit={ onSubmit }
-      initialValues={ { ...currentRecipe } }
+      initialValues={ { ...currentArticle } }
       validate={ ( values ) => {
         const errors = {};
         if ( !values.title ) {
@@ -21,7 +21,10 @@ const RecipeForm = ( { currentRecipe = {}, onSubmit } ) => {
         if ( !values.description ) {
           errors.description = 'Required';
         }
-        if ( currentRecipe.categoryId ) {
+        if ( !values.mainText ) {
+          errors.mainText = 'Required';
+        }
+        if ( currentArticle.categoryId ) {
           if ( !values.categoryId ) {
             errors.categoryId = 'isRequired';
           }
@@ -32,16 +35,20 @@ const RecipeForm = ( { currentRecipe = {}, onSubmit } ) => {
         <form onSubmit={ handleSubmit }>
           <div className="mb-3">
             <label>Title</label>
-            <Field name="title" component={ Input } defaultValue={ currentRecipe.title } />
+            <Field name="title" component={ Input } defaultValue={ currentArticle.title } />
           </div>
           <div className="mb-3">
             <label>Description</label>
-            <Field name="description" component={ Input } defaultValue={ currentRecipe.description } />
+            <Field name="description" component={ Input } defaultValue={ currentArticle.description } />
+          </div>
+          <div className="mb-3">
+            <label>Main Text</label>
+            <Field name="mainText" component={ Input } defaultValue={ currentArticle.mainText } />
           </div>
           {!id && (
-          <div className="mb-3  align-items-center">
-            <Field name="categoryId" component={ SelectCategory } />
-          </div>
+            <div className="mb-3  align-items-center">
+              <Field name="categoryId" component={ SelectCategory } />
+            </div>
           )}
           <Button type="submit">Save</Button>
         </form>
@@ -52,4 +59,4 @@ const RecipeForm = ( { currentRecipe = {}, onSubmit } ) => {
 
 export default connect( ( state ) => ( {
   categories: state.category.categories,
-} ) )( RecipeForm );
+} ) )( ArticleForm );

@@ -7,7 +7,7 @@ import ReactPaginate from 'react-paginate';
 import WrapMain from '../../components/WrapMain';
 import { deleteArticle, getAllArticles, getArticlesByCategory } from '../../redux/article/actions';
 import { pageLimit } from '../../config';
-import RecipeItem from '../Recipes/components/RecipeItem';
+import EntityItem from '../../components/EntityItem';
 
 const Article = ( {
   getAllArticleCall, allArticles, deleteArticleCall, getArticleByCategoryCall,
@@ -21,12 +21,16 @@ const Article = ( {
   const changePage = ( { selected } ) => {
     const pageNumber = +selected + 1;
     if ( pageNumber !== +page ) {
-      history.push( `/${ name }/page/${ pageNumber }` );
+      if ( !catId ) {
+        history.push( `/${ name }/page/${ pageNumber }` );
+      } else {
+        history.push( `/${ name }/category/${ catId }/page/${ pageNumber }` );
+      }
     }
   };
 
   const moveToAddPage = () => {
-    console.log( '>move to add page' );
+    history.push( `/${ name }/add` );
   };
 
   useEffect( () => {
@@ -36,7 +40,7 @@ const Article = ( {
         limit: pageLimit,
       } );
     } else {
-      getArticleByCategoryCall();
+      getArticleByCategoryCall( catId, currentPage, pageLimit );
     }
   }, [catId, getAllArticleCall, getArticleByCategoryCall, page, currentPage] );
 
@@ -53,7 +57,7 @@ const Article = ( {
   }
 
   return (
-    <WrapMain entity={name}>
+    <WrapMain entity={ name }>
       <div className="p-2">
         <Button onClick={ moveToAddPage }>
           Add
@@ -65,7 +69,7 @@ const Article = ( {
       <div>
         {get( entities, 'length', 0 ) > 0
           ? entities.map( ( item ) => (
-            <RecipeItem
+            <EntityItem
               item={ item }
               key={ item._id }
               entity={ name }
