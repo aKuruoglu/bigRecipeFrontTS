@@ -7,4 +7,10 @@ export const getById = ( id ) => ( {
     id,
   },
 } );
-export const editCategories = () => ( { type: categoryActionsTypes.EDIT_CATEGORY } );
+export const editCategories = (id, data ) => ( {
+  type: categoryActionsTypes.EDIT_CATEGORY,
+  payload: {
+    data,
+    id,
+  },
+} );

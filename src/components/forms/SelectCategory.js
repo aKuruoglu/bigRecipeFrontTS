@@ -4,6 +4,7 @@ import { Button } from 'react-bootstrap';
 import CategoryTree from '../category/CategoryTree';
 
 const SelectCategory = ( { meta, input } ) => {
+    console.log(input)
   const [isOpenTree, setIsOpenTree] = useState( false );
   const [category, setCategory] = useState( {} );
   const { label } = category;

@@ -1,17 +1,25 @@
 import React from 'react';
-import CategoryDetails from '../../components/category/CategoryDetails';
-import CategoryTree from '../../components/category/CategoryTree';
+import TreeMenu from 'react-simple-tree-menu';
+import { connect } from 'react-redux';
+import { Button } from 'react-bootstrap';
+import TreeItem from '../../components/treeItem/TreeItem';
 
-const Category = () => (
+const Category = ( { treeData } ) => (
   <div className="container mt-3 h-100">
     <div className="row h-100">
 
-      <div className="col-md-3">
-        <CategoryTree />
-      </div>
+      <div>
+        <Button>Add category</Button>
+        <TreeMenu data={ treeData }>
+          {( { items } ) => (
+            <>
+              {items.map( ( item ) => (
+                <TreeItem key={ item.key } item={ item } />
+              ) )}
+            </>
 
-      <div className="col-md-9">
-        <CategoryDetails />
+          )}
+        </TreeMenu>
       </div>
 
     </div>
@@ -19,4 +27,6 @@ const Category = () => (
   </div>
 );
 
-export default Category;
+export default connect( ( state ) => ( {
+  treeData: state.category.categoriesTree,
+} ) )( Category );

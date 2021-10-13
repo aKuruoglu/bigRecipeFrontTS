@@ -17,6 +17,7 @@ import ArticleEditCategory from './entities/Articles/ArticleEditCategory';
 import ArticleAdd from './entities/Articles/ArticleAdd';
 import ArticleById from './entities/Articles/components/ArticleById';
 import ArticleEdit from './entities/Articles/ArticleEdit';
+import CategoryEdit from "./entities/Categories/CategoryEdit";
 
 function App () {
   return (
@@ -40,6 +41,7 @@ function App () {
         <Route exact path="/article/:id" component={ ArticleById } />
         <Route exact path="/article" component={ Article } />
         <Route exact path="/category" component={ Category } />
+        <Route exact path="/category/edit/:id" component={ CategoryEdit } />
         <Route render={ () => <p>Not found</p> } />
       </Switch>
     </WrapComponent>

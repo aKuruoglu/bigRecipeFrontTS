@@ -36,7 +36,7 @@ const Article = ( {
   useEffect( () => {
     if ( !catId ) {
       getAllArticleCall( {
-        page,
+        page: currentPage,
         limit: pageLimit,
       } );
     } else {

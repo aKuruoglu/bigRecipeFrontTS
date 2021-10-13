@@ -25,6 +25,7 @@ export function* fetchCategoryByIdSaga ( { payload } ) {
 }
 
 export function* sendEditCategorySaga ( { payload } ) {
+  console.log(payload)
   try {
     const result = yield call( editCategory, payload );
     yield put( setCategoryById( result.data ) );
