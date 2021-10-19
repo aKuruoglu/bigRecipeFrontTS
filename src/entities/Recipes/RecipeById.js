@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { Button } from 'react-bootstrap';
 import { useHistory, useParams } from 'react-router-dom';
@@ -6,23 +6,24 @@ import { useHistory, useParams } from 'react-router-dom';
 import WrapSimple from '../../components/WrapSimple';
 import BreadCrumbs from '../../components/BreadCrumbs';
 import { deleteRecipe, getById } from '../../redux/recipe/actions';
+import SimpleRecipe from './SimpleRecipe';
+import useGetById from '../../utils/useGetById';
+import DeleteModal from '../../components/modals/DeleteModal';
 
 const RecipeById = ( { getByIdCall, currentRecipe, deleteRecipeCall } ) => {
   const { id } = useParams();
   const history = useHistory();
   const name = 'recipe';
+  const [show, setShow] = useState( false );
 
-  useEffect( () => {
-    getByIdCall( id );
-  }, [getByIdCall, id] );
+  const handleClose = () => setShow( false );
+  const handleShow = () => setShow( true );
+
+  useGetById( id, getByIdCall );
 
   if ( !currentRecipe ) {
     return null;
   }
-
-  const {
-    _id, categoryId, title, description,
-  } = currentRecipe;
 
   const handleDelete = () => {
     deleteRecipeCall( id );
@@ -36,28 +37,17 @@ const RecipeById = ( { getByIdCall, currentRecipe, deleteRecipeCall } ) => {
   return (
     <WrapSimple>
       <BreadCrumbs entity={ name } />
-      <div className="card p-2">
-        <span>
-          id:
-          {_id}
-        </span>
-        <span>
-          title:
-          {title}
-        </span>
-        <span>
-          description:
-          {description}
-        </span>
-        <span>
-          categoryId:
-          {categoryId}
-        </span>
-      </div>
+      <SimpleRecipe recipe={ currentRecipe } />
       <div className="d-flex justify-content-end">
         <Button className="btn-warning mt-2" onClick={ handleEdit }>Edit Recipe</Button>
-        <Button className="btn-danger mt-2" onClick={ handleDelete }>Delete</Button>
+        <Button className="btn-danger mt-2" onClick={ handleShow }>Delete</Button>
       </div>
+      <DeleteModal
+        handleDelete={ handleDelete }
+        handleClose={ handleClose }
+        open={ show }
+        entity={ name }
+      />
     </WrapSimple>
   );
 };

@@ -5,7 +5,6 @@ import { Route, Switch } from 'react-router-dom';
 import './App.css';
 
 import WrapComponent from './components/WrapComponent';
-import Home from './entities/Home';
 import Recipe from './entities/Recipes/Recipe';
 import Article from './entities/Articles/Article';
 import Category from './entities/Categories/Category';
@@ -15,15 +14,16 @@ import RecipeAdd from './entities/Recipes/RecipeAdd';
 import RecipeEditCategory from './entities/Recipes/RecipeEditCategory';
 import ArticleEditCategory from './entities/Articles/ArticleEditCategory';
 import ArticleAdd from './entities/Articles/ArticleAdd';
-import ArticleById from './entities/Articles/components/ArticleById';
+import ArticleById from './entities/Articles/ArticleById';
 import ArticleEdit from './entities/Articles/ArticleEdit';
-import CategoryEdit from "./entities/Categories/CategoryEdit";
+import CategoryEdit from './entities/Categories/CategoryEdit';
+import CategoryAdd from './entities/Categories/CategoryAdd';
 
 function App () {
   return (
     <WrapComponent>
       <Switch>
-        <Route exact path="/" component={ Home } />
+        <Route exact path="/" component={ Recipe } />
         <Route exact path="/recipe/category/:catId/page/:page" component={ Recipe } />
         <Route exact path="/recipe/:id/edit/category" component={ RecipeEditCategory } />
         <Route exact path="/recipe/category/:catId" component={ Recipe } />
@@ -40,8 +40,9 @@ function App () {
         <Route exact path="/article/add" component={ ArticleAdd } />
         <Route exact path="/article/:id" component={ ArticleById } />
         <Route exact path="/article" component={ Article } />
-        <Route exact path="/category" component={ Category } />
         <Route exact path="/category/edit/:id" component={ CategoryEdit } />
+        <Route exact path="/category/add" component={ CategoryAdd } />
+        <Route exact path="/category" component={ Category } />
         <Route render={ () => <p>Not found</p> } />
       </Switch>
     </WrapComponent>

@@ -8,9 +8,10 @@ import WrapMain from '../../components/WrapMain';
 import { deleteArticle, getAllArticles, getArticlesByCategory } from '../../redux/article/actions';
 import { pageLimit } from '../../config';
 import EntityItem from '../../components/EntityItem';
+import { changeRequestStatus } from '../../redux/article/slice';
 
 const Article = ( {
-  getAllArticleCall, allArticles, deleteArticleCall, getArticleByCategoryCall,
+  getAllArticleCall, allArticles, deleteArticleCall, getArticleByCategoryCall, status, changeStatus,
 } ) => {
   const name = 'article';
   const { catId, page = 1 } = useParams();
@@ -34,6 +35,11 @@ const Article = ( {
   };
 
   useEffect( () => {
+    if ( status === 'success' ) {
+      changeStatus( null );
+      return;
+    }
+
     if ( !catId ) {
       getAllArticleCall( {
         page: currentPage,
@@ -42,7 +48,7 @@ const Article = ( {
     } else {
       getArticleByCategoryCall( catId, currentPage, pageLimit );
     }
-  }, [catId, getAllArticleCall, getArticleByCategoryCall, page, currentPage] );
+  }, [catId, getAllArticleCall, getArticleByCategoryCall, currentPage, status, changeStatus] );
 
   if ( !allArticles ) {
     return null;
@@ -100,8 +106,10 @@ const Article = ( {
 
 export default connect( ( state ) => ( {
   allArticles: state.article.allArticles,
+  status: state.article.requestStatus,
 } ), {
   getAllArticleCall: getAllArticles,
   deleteArticleCall: deleteArticle,
   getArticleByCategoryCall: getArticlesByCategory,
+  changeStatus: changeRequestStatus,
 } )( Article );

@@ -10,6 +10,10 @@ const CategoryTree = ( { categoryTree, initialActiveKey, onClickItem = null } ) 
   useEffect( () => {
     let options = {};
 
+    if ( !categoryTree.length ) {
+      return;
+    }
+
     if ( initialActiveKey ) {
       const temp = initialActiveKey.split( '/' );
       const initialOpenNodes = temp.splice( 0, temp.length - 1 ).join( '/' );

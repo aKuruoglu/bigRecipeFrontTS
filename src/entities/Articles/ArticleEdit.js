@@ -10,6 +10,7 @@ import ArticleForm from './components/ArticleForm';
 const ArticleEdit = ( { currentArticle, updateArticleCall, getByIdCall } ) => {
   const { id } = useParams();
   const history = useHistory();
+  const name = 'article';
 
   useEffect( () => {
     getByIdCall( id );
@@ -26,7 +27,7 @@ const ArticleEdit = ( { currentArticle, updateArticleCall, getByIdCall } ) => {
 
   return (
     <WrapSimple>
-      <BreadCrumbs />
+      <BreadCrumbs entity={ name } />
       <ArticleForm
         currentArticle={ omit( currentArticle, ['categoryId'] ) }
         onSubmit={ onSubmit }

@@ -7,10 +7,27 @@ export const getById = ( id ) => ( {
     id,
   },
 } );
-export const editCategories = (id, data ) => ( {
+
+export const editCategories = ( id, data, history ) => ( {
   type: categoryActionsTypes.EDIT_CATEGORY,
   payload: {
     data,
     id,
+    history,
+  },
+} );
+
+export const deleteCategory = ( id ) => ( {
+  type: categoryActionsTypes.DELETE_CATEGORY,
+  payload: {
+    id,
+  },
+} );
+
+export const addCategory = ( data, history ) => ( {
+  type: categoryActionsTypes.ADD_CATEGORY,
+  payload: {
+    data,
+    history,
   },
 } );

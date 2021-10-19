@@ -2,12 +2,13 @@ import React from 'react';
 import { Field, Form } from 'react-final-form';
 import { Button } from 'react-bootstrap';
 import { connect } from 'react-redux';
-import { useParams } from 'react-router-dom';
+import { useParams, useRouteMatch } from 'react-router-dom';
 import SelectCategory from '../../../components/forms/SelectCategory';
 import Input from '../../../components/forms/Input';
 
 const ArticleForm = ( { currentArticle = {}, onSubmit } ) => {
   const { id } = useParams();
+  const isAddArticle = useRouteMatch( '/article/add' );
 
   return (
     <Form
@@ -24,9 +25,9 @@ const ArticleForm = ( { currentArticle = {}, onSubmit } ) => {
         if ( !values.mainText ) {
           errors.mainText = 'Required';
         }
-        if ( currentArticle.categoryId ) {
+        if ( isAddArticle ) {
           if ( !values.categoryId ) {
-            errors.categoryId = 'isRequired';
+            errors.categoryId = 'Required';
           }
         }
         return errors;
@@ -34,15 +35,15 @@ const ArticleForm = ( { currentArticle = {}, onSubmit } ) => {
       render={ ( { handleSubmit } ) => (
         <form onSubmit={ handleSubmit }>
           <div className="mb-3">
-            <label>Title</label>
+            <label htmlFor="title">Title</label>
             <Field name="title" component={ Input } defaultValue={ currentArticle.title } />
           </div>
           <div className="mb-3">
-            <label>Description</label>
+            <label htmlFor="description">Description</label>
             <Field name="description" component={ Input } defaultValue={ currentArticle.description } />
           </div>
           <div className="mb-3">
-            <label>Main Text</label>
+            <label htmlFor="mainText">Main Text</label>
             <Field name="mainText" component={ Input } defaultValue={ currentArticle.mainText } />
           </div>
           {!id && (

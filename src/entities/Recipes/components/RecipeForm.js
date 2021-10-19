@@ -2,12 +2,13 @@ import React from 'react';
 import { Field, Form } from 'react-final-form';
 import { Button } from 'react-bootstrap';
 import { connect } from 'react-redux';
-import { useParams } from 'react-router-dom';
+import {useParams, useRouteMatch} from 'react-router-dom';
 import SelectCategory from '../../../components/forms/SelectCategory';
 import Input from '../../../components/forms/Input';
 
 const RecipeForm = ( { currentRecipe = {}, onSubmit } ) => {
   const { id } = useParams();
+  const isAddRecipe = useRouteMatch('/recipe/add');
 
   return (
     <Form
@@ -21,9 +22,9 @@ const RecipeForm = ( { currentRecipe = {}, onSubmit } ) => {
         if ( !values.description ) {
           errors.description = 'Required';
         }
-        if ( currentRecipe.categoryId ) {
+        if ( isAddRecipe ) {
           if ( !values.categoryId ) {
-            errors.categoryId = 'isRequired';
+            errors.categoryId = 'Required';
           }
         }
         return errors;
@@ -31,11 +32,11 @@ const RecipeForm = ( { currentRecipe = {}, onSubmit } ) => {
       render={ ( { handleSubmit } ) => (
         <form onSubmit={ handleSubmit }>
           <div className="mb-3">
-            <label>Title</label>
+            <label htmlFor="title">Title</label>
             <Field name="title" component={ Input } defaultValue={ currentRecipe.title } />
           </div>
           <div className="mb-3">
-            <label>Description</label>
+            <label htmlFor="description">Description</label>
             <Field name="description" component={ Input } defaultValue={ currentRecipe.description } />
           </div>
           {!id && (

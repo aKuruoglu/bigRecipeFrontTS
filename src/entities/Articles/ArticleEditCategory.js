@@ -1,15 +1,18 @@
-import React, { useEffect, useState } from 'react';
-import { get } from 'lodash';
+import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { useHistory, useParams, useRouteMatch } from 'react-router-dom';
 
-import { Button, Modal } from 'react-bootstrap';
 import CategoryTree from '../../components/category/CategoryTree';
 import { getById, updateArticleCategory } from '../../redux/article/actions';
 import WrapSimple from '../../components/WrapSimple';
+import BreadCrumbs from '../../components/BreadCrumbs';
+import SimpleArticle from './SimpleArticle';
+import EditModal from '../../components/modals/EditModal';
+import useKeysChain from '../../utils/useKeysChain';
+import useGetById from '../../utils/useGetById';
 
 const ArticleEditCategory = ( {
-  categoryId,
+  currentArticle,
   getByIdCall,
   crumbsMap,
   updateArticleCategoryCall,
@@ -18,26 +21,16 @@ const ArticleEditCategory = ( {
   const [catId, setCatId] = useState( null );
   const { path } = useRouteMatch();
   const entity = path.split( '/' );
-
   const { id } = useParams();
 
-  useEffect( () => {
-    getByIdCall( id );
-  }, [getByIdCall, id] );
+  useGetById( id, getByIdCall );
 
-  if ( !categoryId ) {
+  if ( !currentArticle ) {
     return null;
   }
 
-  let category = crumbsMap[categoryId];
-  const res = [];
-
-  while ( category ) {
-    res.unshift( category._id );
-    category = category.parent;
-  }
-
-  const keysChain = res.join( '/' );
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const keysChain = useKeysChain( currentArticle.categoryId, crumbsMap );
 
   if ( !keysChain ) {
     return null;
@@ -56,28 +49,22 @@ const ArticleEditCategory = ( {
 
   return (
     <WrapSimple>
-      <CategoryTree initialActiveKey={ res.join( '/' ) } onClickItem={ handleShow } />
-      <Modal show={ !!catId } onHide={ handleClose }>
-        <Modal.Header closeButton>
-          <Modal.Title>Editing recipe</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>Do you really want to edit the category?</Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={ handleClose }>
-            Cancel
-          </Button>
-          <Button variant="primary" onClick={ handleEditCategory }>
-            Save Changes
-          </Button>
-        </Modal.Footer>
-      </Modal>
+      <BreadCrumbs entity={ entity[1] } />
+      <SimpleArticle article={ currentArticle } />
+      <h2 className="mt-3">Change article category</h2>
+      <CategoryTree initialActiveKey={ keysChain } onClickItem={ handleShow } />
+      <EditModal
+        handleClose={ handleClose }
+        handleEdit={ handleEditCategory }
+        catId={ !!catId }
+      />
     </WrapSimple>
 
   );
 };
 
 export default connect( ( state ) => ( {
-  categoryId: get( state, 'article.recipeById.categoryId' ),
+  currentArticle: state.article.articleById,
   crumbsMap: state.category.breadCrumbsTree,
 } ), {
   getByIdCall: getById,

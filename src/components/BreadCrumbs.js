@@ -20,13 +20,15 @@ const BreadCrumbs = ( { entityById, crumbsArray, entity } ) => {
     const res = [];
 
     while ( category ) {
-      res.unshift( ( <div
-        key={ category._id }
-        className="breadcrumb-item crumbs"
-        onClick={ moveToCategoryId( category._id ) }
-      >
-        {category.name}
-      </div> ) );
+      res.unshift(
+        ( <div
+          key={ category._id }
+          className="breadcrumb-item crumbs"
+          onClick={ moveToCategoryId( category._id ) }
+        >
+          {category.name}
+        </div> ),
+      );
 
       category = category.parent;
     }

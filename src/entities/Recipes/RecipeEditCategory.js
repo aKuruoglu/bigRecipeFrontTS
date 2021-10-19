@@ -1,14 +1,18 @@
-import React, { useEffect, useState } from 'react';
-import { get } from 'lodash';
+import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { useHistory, useParams, useRouteMatch } from 'react-router-dom';
 
-import { Button, Modal } from 'react-bootstrap';
 import CategoryTree from '../../components/category/CategoryTree';
 import { getById, updateRecipeCategory } from '../../redux/recipe/actions';
+import BreadCrumbs from '../../components/BreadCrumbs';
+import SimpleRecipe from './SimpleRecipe';
+import WrapSimple from '../../components/WrapSimple';
+import EditModal from '../../components/modals/EditModal';
+import useKeysChain from '../../utils/useKeysChain';
+import useGetById from '../../utils/useGetById';
 
 const RecipeEditCategory = ( {
-  categoryId,
+  currentRecipe,
   getByIdCall,
   crumbsMap,
   updateRecipeCategoryCall,
@@ -21,23 +25,14 @@ const RecipeEditCategory = ( {
 
   const [catId, setCatId] = useState( null );
 
-  useEffect( () => {
-    getByIdCall( id );
-  }, [getByIdCall, id] );
+  useGetById( id, getByIdCall );
 
-  if ( !categoryId ) {
+  if ( !currentRecipe ) {
     return null;
   }
 
-  let category = crumbsMap[categoryId];
-  const res = [];
-
-  while ( category ) {
-    res.unshift( category._id );
-    category = category.parent;
-  }
-
-  const keysChain = res.join( '/' );
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const keysChain = useKeysChain( currentRecipe.categoryId, crumbsMap );
 
   if ( !keysChain ) {
     return null;
@@ -55,29 +50,23 @@ const RecipeEditCategory = ( {
   };
 
   return (
-    <>
-      <CategoryTree initialActiveKey={ res.join( '/' ) } onClickItem={ handleShow } />
-      <Modal show={ !!catId } onHide={ handleClose }>
-        <Modal.Header closeButton>
-          <Modal.Title>Editing recipe</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>Do you really want to edit the category?</Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={ handleClose }>
-            Cancel
-          </Button>
-          <Button variant="primary" onClick={ handleEditCategory }>
-            Save Changes
-          </Button>
-        </Modal.Footer>
-      </Modal>
-    </>
+    <WrapSimple>
+      <BreadCrumbs entity={ entity[1] } />
+      <SimpleRecipe recipe={ currentRecipe } />
+      <h2 className="mt-3">Change recipe category</h2>
+      <CategoryTree initialActiveKey={ keysChain } onClickItem={ handleShow } />
+      <EditModal
+        handleClose={ handleClose }
+        handleEdit={ handleEditCategory }
+        catId={ !!catId }
+      />
+    </WrapSimple>
 
   );
 };
 
 export default connect( ( state ) => ( {
-  categoryId: get( state, 'recipe.recipeById.categoryId' ),
+  currentRecipe: state.recipe.recipeById,
   crumbsMap: state.category.breadCrumbsTree,
 } ), {
   getByIdCall: getById,

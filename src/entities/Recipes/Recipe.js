@@ -12,10 +12,16 @@ import EntityItem from '../../components/EntityItem';
 import {
   deleteRecipe, getAllRecipes, getRecipesByCategory,
 } from '../../redux/recipe/actions';
-import { cleanStoreRecipes } from '../../redux/recipe/slice';
+import { changeRequestStatus, cleanStoreRecipes } from '../../redux/recipe/slice';
 
 const Recipe = ( {
-  allRecipeCall, getRecipesByCategoryCall, allRecipes, deleteRecipeCall, cleanStoreRecipesCall,
+  allRecipeCall,
+  getRecipesByCategoryCall,
+  allRecipes,
+  deleteRecipeCall,
+  cleanStoreRecipesCall,
+  status,
+  changeStatus,
 } ) => {
   const history = useHistory();
   const name = 'recipe';
@@ -39,6 +45,11 @@ const Recipe = ( {
   };
 
   useEffect( () => {
+    if ( status === 'success' ) {
+      changeStatus( null );
+      return;
+    }
+
     if ( !catId ) {
       allRecipeCall( {
         page: currentPage,
@@ -47,8 +58,7 @@ const Recipe = ( {
     } else {
       getRecipesByCategoryCall( catId, currentPage, pageLimit );
     }
-  }, [allRecipeCall, catId, page, getRecipesByCategoryCall, currentPage] );
-
+  }, [allRecipeCall, catId, getRecipesByCategoryCall, currentPage, status, changeStatus] );
   if ( !allRecipes ) {
     return null;
   }
@@ -103,9 +113,11 @@ const Recipe = ( {
 
 export default connect( ( state ) => ( {
   allRecipes: state.recipe.allRecipes,
+  status: state.recipe.requestStatus,
 } ), {
   allRecipeCall: getAllRecipes,
   getRecipesByCategoryCall: getRecipesByCategory,
   deleteRecipeCall: deleteRecipe,
   cleanStoreRecipesCall: cleanStoreRecipes,
+  changeStatus: changeRequestStatus,
 } )( Recipe );

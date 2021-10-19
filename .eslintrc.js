@@ -35,6 +35,11 @@ module.exports = {
     'no-plusplus': ['off', { allowForLoopAfterthoughts: true }],
     'no-continue': 'off',
     'import/no-cycle': 'off',
+    'jsx-a11y/click-events-have-key-events': 'off',
+    'jsx-a11y/no-static-element-interactions': 'off',
+    'react/jsx-closing-tag-location': 'off',
+    'react/jsx-props-no-spreading': 'off',
+    'class-methods-use-this': 'off',
     'jsx-a11y/label-has-associated-control': [2, {
       labelComponents: ['label'],
       labelAttributes: ['htmlFor'],

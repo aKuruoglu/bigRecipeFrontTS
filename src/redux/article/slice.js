@@ -6,6 +6,7 @@ export const articleSlice = createSlice( {
   initialState: {
     allArticles: null,
     articleById: null,
+    requestStatus: null,
   },
   reducers: {
     setAllArticles: ( state, { payload } ) => {
@@ -14,12 +15,15 @@ export const articleSlice = createSlice( {
     setArticleById: ( state, { payload } ) => {
       state.articleById = payload;
     },
+    changeRequestStatus: ( state, { payload } ) => {
+      state.requestStatus = payload;
+    },
     cleanStoreArticles: ( state ) => {
       state.allArticles = null;
     },
   },
 } );
 
-export const { setAllArticles, setArticleById, cleanStoreArticles } = articleSlice.actions;
+export const { setAllArticles, setArticleById, changeRequestStatus } = articleSlice.actions;
 
 export default articleSlice.reducer;

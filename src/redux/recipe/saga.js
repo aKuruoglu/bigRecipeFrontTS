@@ -9,66 +9,98 @@ import {
   getRecipesByCategoryApi, updateRecipeCategoryApi,
 } from '../../api/apiRecipe';
 import actionTypes from './actionTypes';
-import { setAllRecipes, setRecipeById } from './slice';
+import { changeRequestStatus, setAllRecipes, setRecipeById } from './slice';
+import { setLoading } from '../common/slice';
+import Notification from '../../utils/Notification';
 
 export function* fetchRecipesSaga ( { payload } ) {
   try {
+    yield put( setLoading( true ) );
     const result = yield call( getAllRecipesApi, payload );
     yield put( setAllRecipes( result.data ) );
+    yield put( setLoading( false ) );
   } catch ( e ) {
-    yield put( { type: 'TODO_FETCH_FAILED' } );
+    yield put( setLoading( false ) );
+    const res = e.response.data[0];
+    Notification.error( res.message );
   }
 }
 
 export function* fetchRecipesByIdSaga ( { payload } ) {
   try {
+    yield put( setLoading( true ) );
     yield put( setRecipeById( null ) );
     const result = yield call( getRecipeByIdApi, payload );
     yield put( setRecipeById( result.data ) );
+    yield put( setLoading( false ) );
   } catch ( e ) {
-    yield put( { type: 'TODO_FETCH_FAILED' } );
+    yield put( setLoading( false ) );
+    const res = e.response.data[0];
+    Notification.error( res.message );
   }
 }
 
 export function* fetchRecipesByCategorySaga ( { payload } ) {
   try {
+    yield put( setLoading( true ) );
     const result = yield call( getRecipesByCategoryApi, payload );
     yield put( setAllRecipes( result.data ) );
+    yield put( setLoading( false ) );
   } catch ( e ) {
-    yield put( { type: 'TODO_FETCH_FAILED' } );
+    yield put( setLoading( false ) );
+    const res = e.response.data[0];
+    Notification.error( res.message );
   }
 }
 
 export function* updateRecipeByIdSaga ( { payload } ) {
   try {
+    yield put( setLoading( true ) );
     yield call( updateRecipeApi, payload );
+    yield put( setLoading( false ) );
   } catch ( e ) {
-    yield put( { type: 'TODO_FETCH_FAILED' } );
+    yield put( setLoading( false ) );
+    const res = e.response.data[0];
+    Notification.error( res.message );
   }
 }
 
 export function* updateRecipeCategorySaga ( { payload } ) {
   try {
+    yield put( setLoading( true ) );
     const result = yield call( updateRecipeCategoryApi, payload );
     yield put( setRecipeById( result.data ) );
+    yield put( setLoading( false ) );
   } catch ( e ) {
-    yield put( { type: 'TODO_FETCH_FAILED' } );
+    yield put( setLoading( false ) );
+    const res = e.response.data[0];
+    Notification.error( res.message );
   }
 }
 
 export function* addRecipeByIdSaga ( { payload } ) {
   try {
+    yield put( setLoading( true ) );
     yield call( addRecipeApi, payload );
+    yield put( setLoading( false ) );
   } catch ( e ) {
-    yield put( { type: 'TODO_FETCH_FAILED' } );
+    yield put( setLoading( false ) );
+    const res = e.response.data[0];
+    Notification.error( res.message );
   }
 }
 
 export function* deleteRecipeSaga ( { payload } ) {
   try {
+    yield put( setLoading( true ) );
     yield call( deleteRecipeApi, payload );
+    yield put( setLoading( false ) );
+    yield put( changeRequestStatus( 'success' ) );
+    Notification.success( 'Success deleting' );
   } catch ( e ) {
-    yield put( { type: 'TODO_FETCH_FAILED' } );
+    yield put( setLoading( false ) );
+    const res = e.response.data[0];
+    Notification.error( res.message );
   }
 }
 

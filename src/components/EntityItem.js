@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import {
-  Button, ButtonGroup, DropdownButton, Dropdown, Modal,
+  ButtonGroup, DropdownButton, Dropdown,
 } from 'react-bootstrap';
 import { useHistory } from 'react-router-dom';
+import DeleteModal from './modals/DeleteModal';
 
 const EntityItem = ( {
   item, deleteEntityCall, entity,
@@ -19,7 +20,7 @@ const EntityItem = ( {
   const moveEditRecipe = () => {
     history.push( `/${ entity }/edit/${ item._id }` );
   };
-  const handleDeleteRecipe = () => {
+  const handleDelete = () => {
     deleteEntityCall( item._id );
     setShow( false );
   };
@@ -47,24 +48,12 @@ const EntityItem = ( {
             </Dropdown.Item>
             <Dropdown.Item eventKey="2" onClick={ moveChangeCategory }>Change category</Dropdown.Item>
           </DropdownButton>
-          <Modal show={ show } onHide={ handleClose }>
-            <Modal.Header closeButton>
-              <Modal.Title>Editing deleting</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-              Do you really want to delete the
-              {entity}
-              ?
-            </Modal.Body>
-            <Modal.Footer>
-              <Button variant="secondary" onClick={ handleClose }>
-                Cancel
-              </Button>
-              <Button variant="primary" onClick={ handleDeleteRecipe }>
-                Save Changes
-              </Button>
-            </Modal.Footer>
-          </Modal>
+          <DeleteModal
+            entity={ entity }
+            handleDelete={ handleDelete }
+            open={ show }
+            handleClose={ handleClose }
+          />
         </div>
 
       </div>
