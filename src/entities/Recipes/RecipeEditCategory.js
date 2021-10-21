@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { useHistory, useParams, useRouteMatch } from 'react-router-dom';
 
@@ -16,6 +17,7 @@ const RecipeEditCategory = ( {
   getByIdCall,
   crumbsMap,
   updateRecipeCategoryCall,
+  currentRecipeInStore,
 } ) => {
   const { id } = useParams();
   const history = useHistory();
@@ -27,7 +29,7 @@ const RecipeEditCategory = ( {
 
   useGetById( id, getByIdCall );
 
-  if ( !currentRecipe ) {
+  if ( !currentRecipeInStore ) {
     return null;
   }
 
@@ -65,8 +67,22 @@ const RecipeEditCategory = ( {
   );
 };
 
+RecipeEditCategory.propTypes = {
+  currentRecipe: PropTypes.shape( {
+    _id: PropTypes.string,
+    title: PropTypes.string,
+    description: PropTypes.string,
+    categoryId: PropTypes.string,
+  } ).isRequired,
+  currentRecipeInStore: PropTypes.bool.isRequired,
+  crumbsMap: PropTypes.objectOf( PropTypes.object ).isRequired,
+  getByIdCall: PropTypes.func.isRequired,
+  updateRecipeCategoryCall: PropTypes.func.isRequired,
+};
+
 export default connect( ( state ) => ( {
-  currentRecipe: state.recipe.recipeById,
+  currentRecipe: state.recipe.recipeById ? state.recipe.recipeById : {},
+  currentRecipeInStore: !!state.recipe.recipeById,
   crumbsMap: state.category.breadCrumbsTree,
 } ), {
   getByIdCall: getById,

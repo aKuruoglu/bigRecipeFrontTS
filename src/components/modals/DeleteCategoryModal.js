@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Button, Modal } from 'react-bootstrap';
 
 const DeleteCategoryModal = ( {
@@ -35,5 +36,18 @@ const DeleteCategoryModal = ( {
     </Modal.Footer>
   </Modal>
 );
+
+DeleteCategoryModal.propTypes = {
+  currentCategory: PropTypes.shape( {
+    _id: PropTypes.string,
+    parentCategoryId: PropTypes.string,
+    name: PropTypes.string,
+    articlesCount: PropTypes.number,
+    recipesCount: PropTypes.number,
+  } ).isRequired,
+  show: PropTypes.bool.isRequired,
+  handleClose: PropTypes.func.isRequired,
+  handleDelete: PropTypes.func.isRequired,
+};
 
 export default DeleteCategoryModal;

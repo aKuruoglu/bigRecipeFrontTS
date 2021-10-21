@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { get } from 'lodash';
 import { Button } from 'react-bootstrap';
@@ -18,6 +19,7 @@ const Recipe = ( {
   allRecipeCall,
   getRecipesByCategoryCall,
   allRecipes,
+  allRecipesInStore,
   deleteRecipeCall,
   cleanStoreRecipesCall,
   status,
@@ -46,7 +48,7 @@ const Recipe = ( {
 
   useEffect( () => {
     if ( status === 'success' ) {
-      changeStatus( null );
+      changeStatus( '' );
       return;
     }
 
@@ -59,7 +61,8 @@ const Recipe = ( {
       getRecipesByCategoryCall( catId, currentPage, pageLimit );
     }
   }, [allRecipeCall, catId, getRecipesByCategoryCall, currentPage, status, changeStatus] );
-  if ( !allRecipes ) {
+
+  if ( !allRecipesInStore ) {
     return null;
   }
 
@@ -111,8 +114,28 @@ const Recipe = ( {
   );
 };
 
+Recipe.propTypes = {
+  allRecipes: PropTypes.shape( {
+    entities: PropTypes.arrayOf( PropTypes.shape( {
+      _id: PropTypes.string,
+      title: PropTypes.string,
+      description: PropTypes.string,
+      categoryId: PropTypes.string,
+    } ) ),
+    total: PropTypes.number,
+  } ).isRequired,
+  allRecipesInStore: PropTypes.bool.isRequired,
+  status: PropTypes.string.isRequired,
+  allRecipeCall: PropTypes.func.isRequired,
+  getRecipesByCategoryCall: PropTypes.func.isRequired,
+  deleteRecipeCall: PropTypes.func.isRequired,
+  cleanStoreRecipesCall: PropTypes.func.isRequired,
+  changeStatus: PropTypes.func.isRequired,
+};
+
 export default connect( ( state ) => ( {
-  allRecipes: state.recipe.allRecipes,
+  allRecipes: state.recipe.allRecipes ? state.recipe.allRecipes : {},
+  allRecipesInStore: !!state.recipe.allRecipes,
   status: state.recipe.requestStatus,
 } ), {
   allRecipeCall: getAllRecipes,

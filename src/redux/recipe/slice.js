@@ -6,7 +6,7 @@ export const recipeSlice = createSlice( {
   initialState: {
     allRecipes: null,
     recipeById: null,
-    requestStatus: null,
+    requestStatus: '',
   },
   reducers: {
     setAllRecipes: ( state, { payload } ) => {

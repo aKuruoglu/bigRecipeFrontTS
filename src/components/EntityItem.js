@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import {
   ButtonGroup, DropdownButton, Dropdown,
 } from 'react-bootstrap';
@@ -59,6 +60,11 @@ const EntityItem = ( {
       </div>
     </div>
   );
+};
+
+EntityItem.propTypes = {
+  deleteEntityCall: PropTypes.func.isRequired,
+  entity: PropTypes.string.isRequired,
 };
 
 export default EntityItem;

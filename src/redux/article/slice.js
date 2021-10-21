@@ -6,7 +6,7 @@ export const articleSlice = createSlice( {
   initialState: {
     allArticles: null,
     articleById: null,
-    requestStatus: null,
+    requestStatus: '',
   },
   reducers: {
     setAllArticles: ( state, { payload } ) => {

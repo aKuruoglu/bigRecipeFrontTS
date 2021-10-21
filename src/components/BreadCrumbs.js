@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { get } from 'lodash';
 import { useHistory } from 'react-router-dom';
@@ -40,6 +41,11 @@ const BreadCrumbs = ( { entityById, crumbsArray, entity } ) => {
       {bread}
     </div>
   );
+};
+
+BreadCrumbs.propTypes = {
+  crumbsArray: PropTypes.objectOf( PropTypes.object ).isRequired,
+  entity: PropTypes.string.isRequired,
 };
 
 export default connect( ( state, { entity } ) => ( {

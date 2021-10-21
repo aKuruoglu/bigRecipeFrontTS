@@ -1,7 +1,7 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Field, Form } from 'react-final-form';
 import { Button } from 'react-bootstrap';
-import { connect } from 'react-redux';
 import { useParams, useRouteMatch } from 'react-router-dom';
 import SelectCategory from '../../../components/forms/SelectCategory';
 import Input from '../../../components/forms/Input';
@@ -54,6 +54,19 @@ const CategoryForm = ( { currentCategory = {}, onSubmit } ) => {
   );
 };
 
-export default connect( ( state ) => ( {
-  categories: state.category.categories,
-} ) )( CategoryForm );
+CategoryForm.propTypes = {
+  currentCategory: PropTypes.shape( {
+    name: PropTypes.string,
+    parentCategory: PropTypes.oneOfType( [
+      PropTypes.oneOf( [null] ),
+      PropTypes.string,
+    ] ),
+  } ),
+  onSubmit: PropTypes.func.isRequired,
+};
+
+CategoryForm.defaultProps = {
+  currentCategory: {},
+};
+
+export default CategoryForm;

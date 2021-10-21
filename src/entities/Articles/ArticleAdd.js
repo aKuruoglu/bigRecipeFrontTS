@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 
@@ -6,7 +7,7 @@ import WrapSimple from '../../components/WrapSimple';
 import { addArticle } from '../../redux/article/actions';
 import ArticleForm from './components/ArticleForm';
 
-const RecipeAdd = ( { addArticleCall } ) => {
+const ArticleAdd = ( { addArticleCall } ) => {
   const history = useHistory();
   const onSubmit = ( values ) => {
     addArticleCall( values );
@@ -22,6 +23,10 @@ const RecipeAdd = ( { addArticleCall } ) => {
   );
 };
 
+ArticleAdd.propTypes = {
+  addArticleCall: PropTypes.func.isRequired,
+};
+
 export default connect( null, {
   addArticleCall: addArticle,
-} )( RecipeAdd );
+} )( ArticleAdd );

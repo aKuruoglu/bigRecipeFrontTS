@@ -1,12 +1,12 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Field, Form } from 'react-final-form';
 import { Button } from 'react-bootstrap';
-import { connect } from 'react-redux';
 import { useParams, useRouteMatch } from 'react-router-dom';
 import SelectCategory from '../../../components/forms/SelectCategory';
 import Input from '../../../components/forms/Input';
 
-const ArticleForm = ( { currentArticle = {}, onSubmit } ) => {
+const ArticleForm = ( { currentArticle, onSubmit } ) => {
   const { id } = useParams();
   const isAddArticle = useRouteMatch( '/article/add' );
 
@@ -58,6 +58,17 @@ const ArticleForm = ( { currentArticle = {}, onSubmit } ) => {
   );
 };
 
-export default connect( ( state ) => ( {
-  categories: state.category.categories,
-} ) )( ArticleForm );
+ArticleForm.propTypes = {
+  currentArticle: PropTypes.shape( {
+    _id: PropTypes.string,
+    title: PropTypes.string,
+    description: PropTypes.string,
+    mainText: PropTypes.string,
+  } ),
+  onSubmit: PropTypes.func.isRequired,
+};
+ArticleForm.defaultProps = {
+  currentArticle: {},
+};
+
+export default ArticleForm;

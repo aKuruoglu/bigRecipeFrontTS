@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import TreeMenu from 'react-simple-tree-menu';
 import 'react-simple-tree-menu/dist/main.css';
@@ -34,9 +35,13 @@ const CategoryTree = ( { categoryTree, initialActiveKey, onClickItem = null } ) 
   return tree;
 };
 
+CategoryTree.propTypes = {
+  categoryTree: PropTypes.arrayOf( PropTypes.object ).isRequired,
+  getByIdCall: PropTypes.func.isRequired,
+};
+
 export default connect( ( state ) => ( {
   categoryTree: state.category.categoriesTree,
-  categoryId: state.category.categoryById,
 } ), {
   getByIdCall: getById,
 } )( CategoryTree );

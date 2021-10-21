@@ -9,7 +9,7 @@ export const categorySlice = createSlice( {
     categories: [],
     categoriesTree: [],
     breadCrumbsTree: {},
-    categoryById: {},
+    categoryById: null,
   },
   reducers: {
     setAllCategory: ( state, { payload } ) => {

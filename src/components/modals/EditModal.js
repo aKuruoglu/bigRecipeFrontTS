@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Button, Modal } from 'react-bootstrap';
 
 const EditModal = ( { catId, handleClose, handleEdit } ) => (
@@ -17,5 +18,11 @@ const EditModal = ( { catId, handleClose, handleEdit } ) => (
     </Modal.Footer>
   </Modal>
 );
+
+EditModal.propTypes = {
+  catId: PropTypes.bool.isRequired,
+  handleEdit: PropTypes.func.isRequired,
+  handleClose: PropTypes.func.isRequired,
+};
 
 export default EditModal;

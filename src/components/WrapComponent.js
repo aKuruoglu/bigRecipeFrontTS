@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import ReactNotification from 'react-notifications-component';
 import 'react-notifications-component/dist/theme.css';
@@ -18,6 +19,12 @@ const WrapComponent = ( { children, getCategoriesCall, ifLoading } ) => {
       { children }
     </Loader>
   );
+};
+
+WrapComponent.propTypes = {
+  getCategoriesCall: PropTypes.func.isRequired,
+  ifLoading: PropTypes.bool.isRequired,
+  children: PropTypes.element.isRequired,
 };
 
 export default connect( ( state ) => ( {

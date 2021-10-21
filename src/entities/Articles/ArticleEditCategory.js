@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { useHistory, useParams, useRouteMatch } from 'react-router-dom';
 
@@ -16,16 +17,16 @@ const ArticleEditCategory = ( {
   getByIdCall,
   crumbsMap,
   updateArticleCategoryCall,
+  currentArticleInStore,
 } ) => {
   const history = useHistory();
   const [catId, setCatId] = useState( null );
   const { path } = useRouteMatch();
   const entity = path.split( '/' );
   const { id } = useParams();
-
   useGetById( id, getByIdCall );
 
-  if ( !currentArticle ) {
+  if ( !currentArticleInStore ) {
     return null;
   }
 
@@ -63,8 +64,23 @@ const ArticleEditCategory = ( {
   );
 };
 
+ArticleEditCategory.propTypes = {
+  currentArticle: PropTypes.shape( {
+    _id: PropTypes.string,
+    categoryId: PropTypes.string,
+    description: PropTypes.string,
+    mainText: PropTypes.string,
+    title: PropTypes.string,
+  } ).isRequired,
+  currentArticleInStore: PropTypes.bool.isRequired,
+  crumbsMap: PropTypes.objectOf( PropTypes.object ).isRequired,
+  getByIdCall: PropTypes.func.isRequired,
+  updateArticleCategoryCall: PropTypes.func.isRequired,
+};
+
 export default connect( ( state ) => ( {
-  currentArticle: state.article.articleById,
+  currentArticle: state.article.articleById ? state.article.articleById : {},
+  currentArticleInStore: !!state.article.articleById,
   crumbsMap: state.category.breadCrumbsTree,
 } ), {
   getByIdCall: getById,

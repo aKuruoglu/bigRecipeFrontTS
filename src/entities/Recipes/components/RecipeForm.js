@@ -1,14 +1,15 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Field, Form } from 'react-final-form';
 import { Button } from 'react-bootstrap';
 import { connect } from 'react-redux';
-import {useParams, useRouteMatch} from 'react-router-dom';
+import { useParams, useRouteMatch } from 'react-router-dom';
 import SelectCategory from '../../../components/forms/SelectCategory';
 import Input from '../../../components/forms/Input';
 
-const RecipeForm = ( { currentRecipe = {}, onSubmit } ) => {
+const RecipeForm = ( { currentRecipe, onSubmit } ) => {
   const { id } = useParams();
-  const isAddRecipe = useRouteMatch('/recipe/add');
+  const isAddRecipe = useRouteMatch( '/recipe/add' );
 
   return (
     <Form
@@ -49,6 +50,19 @@ const RecipeForm = ( { currentRecipe = {}, onSubmit } ) => {
       ) }
     />
   );
+};
+
+RecipeForm.propTypes = {
+  currentRecipe: PropTypes.shape( {
+    _id: PropTypes.string,
+    title: PropTypes.string,
+    description: PropTypes.string,
+  } ),
+  onSubmit: PropTypes.func.isRequired,
+};
+
+RecipeForm.defaultProps = {
+  currentRecipe: {},
 };
 
 export default connect( ( state ) => ( {

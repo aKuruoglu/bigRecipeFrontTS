@@ -1,17 +1,25 @@
 import React, { useEffect } from 'react';
-import { connect } from 'react-redux';
 import { get } from 'lodash';
-import { useHistory, useParams } from 'react-router-dom';
+import { connect } from 'react-redux';
 import { Button } from 'react-bootstrap';
 import ReactPaginate from 'react-paginate';
-import WrapMain from '../../components/WrapMain';
-import { deleteArticle, getAllArticles, getArticlesByCategory } from '../../redux/article/actions';
+import { useHistory, useParams } from 'react-router-dom';
+import PropTypes from 'prop-types';
+
 import { pageLimit } from '../../config';
+import WrapMain from '../../components/WrapMain';
 import EntityItem from '../../components/EntityItem';
 import { changeRequestStatus } from '../../redux/article/slice';
+import { deleteArticle, getAllArticles, getArticlesByCategory } from '../../redux/article/actions';
 
 const Article = ( {
-  getAllArticleCall, allArticles, deleteArticleCall, getArticleByCategoryCall, status, changeStatus,
+  getAllArticleCall,
+  allArticles,
+  articleInStore,
+  deleteArticleCall,
+  getArticleByCategoryCall,
+  status,
+  changeStatus,
 } ) => {
   const name = 'article';
   const { catId, page = 1 } = useParams();
@@ -36,7 +44,7 @@ const Article = ( {
 
   useEffect( () => {
     if ( status === 'success' ) {
-      changeStatus( null );
+      changeStatus( '' );
       return;
     }
 
@@ -50,7 +58,7 @@ const Article = ( {
     }
   }, [catId, getAllArticleCall, getArticleByCategoryCall, currentPage, status, changeStatus] );
 
-  if ( !allArticles ) {
+  if ( !articleInStore ) {
     return null;
   }
   const { entities, total } = allArticles;
@@ -104,8 +112,28 @@ const Article = ( {
   );
 };
 
+Article.propTypes = {
+  allArticles: PropTypes.shape( {
+    entities: PropTypes.arrayOf( PropTypes.shape( {
+      _id: PropTypes.string,
+      categoryId: PropTypes.string,
+      description: PropTypes.string,
+      mainText: PropTypes.string,
+      title: PropTypes.string,
+    } ) ),
+    total: PropTypes.number,
+  } ).isRequired,
+  articleInStore: PropTypes.bool.isRequired,
+  status: PropTypes.string.isRequired,
+  getAllArticleCall: PropTypes.func.isRequired,
+  deleteArticleCall: PropTypes.func.isRequired,
+  getArticleByCategoryCall: PropTypes.func.isRequired,
+  changeStatus: PropTypes.func.isRequired,
+};
+
 export default connect( ( state ) => ( {
-  allArticles: state.article.allArticles,
+  allArticles: state.article.allArticles ? state.article.allArticles : {},
+  articleInStore: !!state.article.allArticles,
   status: state.article.requestStatus,
 } ), {
   getAllArticleCall: getAllArticles,

@@ -1,4 +1,5 @@
 import React, { useCallback } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import {
   useHistory, useParams,
@@ -36,6 +37,12 @@ const WrapMain = ( { children, crumbsMap, entity } ) => {
       </div>
     </div>
   );
+};
+
+WrapMain.propTypes = {
+  crumbsMap: PropTypes.objectOf( PropTypes.object ).isRequired,
+  entity: PropTypes.string.isRequired,
+  children: PropTypes.arrayOf( PropTypes.element ).isRequired,
 };
 
 export default connect( ( state ) => ( {

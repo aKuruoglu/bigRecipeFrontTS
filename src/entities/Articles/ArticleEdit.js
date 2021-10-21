@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import PropTypes from 'prop-types';
 import { useHistory, useParams } from 'react-router-dom';
 import { omit } from 'lodash';
 import { connect } from 'react-redux';
@@ -7,7 +8,9 @@ import BreadCrumbs from '../../components/BreadCrumbs';
 import { getById, updateArticle } from '../../redux/article/actions';
 import ArticleForm from './components/ArticleForm';
 
-const ArticleEdit = ( { currentArticle, updateArticleCall, getByIdCall } ) => {
+const ArticleEdit = ( {
+  currentArticle, updateArticleCall, getByIdCall, currentArticleInStore,
+} ) => {
   const { id } = useParams();
   const history = useHistory();
   const name = 'article';
@@ -21,7 +24,7 @@ const ArticleEdit = ( { currentArticle, updateArticleCall, getByIdCall } ) => {
     history.push( `/article/${ id }` );
   };
 
-  if ( !currentArticle ) {
+  if ( !currentArticleInStore ) {
     return null;
   }
 
@@ -36,8 +39,22 @@ const ArticleEdit = ( { currentArticle, updateArticleCall, getByIdCall } ) => {
   );
 };
 
+ArticleEdit.propTypes = {
+  currentArticle: PropTypes.shape( {
+    _id: PropTypes.string,
+    categoryId: PropTypes.string,
+    description: PropTypes.string,
+    mainText: PropTypes.string,
+    title: PropTypes.string,
+  } ).isRequired,
+  currentArticleInStore: PropTypes.bool.isRequired,
+  getByIdCall: PropTypes.func.isRequired,
+  updateArticleCall: PropTypes.func.isRequired,
+};
+
 export default connect( ( state ) => ( {
-  currentArticle: state.article.articleById,
+  currentArticle: state.article.articleById ? state.article.articleById : {},
+  currentArticleInStore: !!state.article.articleById,
 } ), {
   getByIdCall: getById,
   updateArticleCall: updateArticle,

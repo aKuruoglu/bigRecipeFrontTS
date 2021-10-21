@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 const SimpleRecipe = ( { recipe } ) => {
   const {
@@ -25,6 +26,19 @@ const SimpleRecipe = ( { recipe } ) => {
       </span>
     </div>
   );
+};
+
+SimpleRecipe.propTypes = {
+  recipe: PropTypes.shape( {
+    _id: PropTypes.string,
+    title: PropTypes.string,
+    description: PropTypes.string,
+    categoryId: PropTypes.string,
+  } ),
+};
+
+SimpleRecipe.defaultProps = {
+  recipe: {},
 };
 
 export default SimpleRecipe;

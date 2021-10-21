@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import CategoryForm from './components/CategoryForm';
@@ -16,6 +17,10 @@ const CategoryAdd = ( { addCategoryCall } ) => {
       <CategoryForm onSubmit={ submit } />
     </WrapSimple>
   );
+};
+
+CategoryAdd.propTypes = {
+  addCategoryCall: PropTypes.func.isRequired,
 };
 
 export default connect( null, {

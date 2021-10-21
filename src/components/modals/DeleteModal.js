@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Button, Modal } from 'react-bootstrap';
 
 const DeleteModal = ( {
@@ -28,5 +29,12 @@ const DeleteModal = ( {
     </Modal.Footer>
   </Modal>
 );
+
+DeleteModal.propTypes = {
+  entity: PropTypes.string.isRequired,
+  open: PropTypes.bool.isRequired,
+  handleDelete: PropTypes.func.isRequired,
+  handleClose: PropTypes.func.isRequired,
+};
 
 export default DeleteModal;

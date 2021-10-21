@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import PropTypes from 'prop-types';
 import { useHistory, useParams } from 'react-router-dom';
 import { Button } from 'react-bootstrap';
 import { connect } from 'react-redux';
@@ -7,7 +8,9 @@ import BreadCrumbs from '../../components/BreadCrumbs';
 import { deleteArticle, getById } from '../../redux/article/actions';
 import SimpleArticle from './SimpleArticle';
 
-const ArticleById = ( { getByIdCall, deleteArticleCall, currentArticle } ) => {
+const ArticleById = ( {
+  getByIdCall, deleteArticleCall, currentArticle, currentArticleInStore,
+} ) => {
   const { id } = useParams();
   const history = useHistory();
   const name = 'article';
@@ -16,7 +19,7 @@ const ArticleById = ( { getByIdCall, deleteArticleCall, currentArticle } ) => {
     getByIdCall( id );
   }, [getByIdCall, id] );
 
-  if ( !currentArticle ) {
+  if ( !currentArticleInStore ) {
     return null;
   }
 
@@ -41,8 +44,22 @@ const ArticleById = ( { getByIdCall, deleteArticleCall, currentArticle } ) => {
   );
 };
 
+ArticleById.propTypes = {
+  currentArticle: PropTypes.shape( {
+    _id: PropTypes.string,
+    categoryId: PropTypes.string,
+    description: PropTypes.string,
+    mainText: PropTypes.string,
+    title: PropTypes.string,
+  } ).isRequired,
+  currentArticleInStore: PropTypes.bool.isRequired,
+  getByIdCall: PropTypes.func.isRequired,
+  deleteArticleCall: PropTypes.func.isRequired,
+};
+
 export default connect( ( state ) => ( {
-  currentArticle: state.article.articleById,
+  currentArticle: state.article.articleById ? state.article.articleById : {},
+  currentArticleInStore: !!state.article.articleById,
 } ), {
   getByIdCall: getById,
   deleteArticleCall: deleteArticle,
