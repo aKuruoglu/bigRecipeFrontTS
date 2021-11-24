@@ -1,13 +1,19 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, {FC} from 'react';
 import { Field, Form } from 'react-final-form';
 import { Button } from 'react-bootstrap';
 import { useParams, useRouteMatch } from 'react-router-dom';
 import SelectCategory from '../../../components/forms/SelectCategory';
 import Input from '../../../components/forms/Input';
+import { IArticle } from "../../../redux/article/interface";
+import { Id } from "../../../redux/common/interface";
 
-const ArticleForm = ( { currentArticle, onSubmit } ) => {
-  const { id } = useParams();
+interface ArticleFormProps {
+  currentArticle?: IArticle | null;
+  onSubmit: ({}: IArticle) => void;
+}
+
+const ArticleForm: FC<ArticleFormProps> = ( { currentArticle = {}, onSubmit } ) => {
+  const { id }: {id: Id} = useParams();
   const isAddArticle = useRouteMatch( '/article/add' );
 
   return (
@@ -15,7 +21,7 @@ const ArticleForm = ( { currentArticle, onSubmit } ) => {
       onSubmit={ onSubmit }
       initialValues={ { ...currentArticle } }
       validate={ ( values ) => {
-        const errors = {};
+        const errors: {[key: string]: string} = {};
         if ( !values.title ) {
           errors.title = 'Required';
         }
@@ -36,15 +42,15 @@ const ArticleForm = ( { currentArticle, onSubmit } ) => {
         <form onSubmit={ handleSubmit }>
           <div className="mb-3">
             <label htmlFor="title">Title</label>
-            <Field name="title" component={ Input } defaultValue={ currentArticle.title } />
+            <Field name="title" component={ Input } defaultValue={ currentArticle!.title } />
           </div>
           <div className="mb-3">
             <label htmlFor="description">Description</label>
-            <Field name="description" component={ Input } defaultValue={ currentArticle.description } />
+            <Field name="description" component={ Input } defaultValue={ currentArticle!.description } />
           </div>
           <div className="mb-3">
             <label htmlFor="mainText">Main Text</label>
-            <Field name="mainText" component={ Input } defaultValue={ currentArticle.mainText } />
+            <Field name="mainText" component={ Input } defaultValue={ currentArticle!.mainText } />
           </div>
           {!id && (
             <div className="mb-3  align-items-center">
@@ -56,19 +62,6 @@ const ArticleForm = ( { currentArticle, onSubmit } ) => {
       ) }
     />
   );
-};
-
-ArticleForm.propTypes = {
-  currentArticle: PropTypes.shape( {
-    _id: PropTypes.string,
-    title: PropTypes.string,
-    description: PropTypes.string,
-    mainText: PropTypes.string,
-  } ),
-  onSubmit: PropTypes.func.isRequired,
-};
-ArticleForm.defaultProps = {
-  currentArticle: {},
 };
 
 export default ArticleForm;

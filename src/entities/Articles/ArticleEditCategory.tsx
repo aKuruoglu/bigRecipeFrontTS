@@ -1,8 +1,6 @@
-import React, { useState } from 'react';
-import PropTypes from 'prop-types';
+import React, {FC, useState} from 'react';
 import { connect } from 'react-redux';
 import { useHistory, useParams, useRouteMatch } from 'react-router-dom';
-
 import CategoryTree from '../../components/category/CategoryTree';
 import { getById, updateArticleCategory } from '../../redux/article/actions';
 import WrapSimple from '../../components/WrapSimple';
@@ -11,22 +9,32 @@ import SimpleArticle from './SimpleArticle';
 import EditModal from '../../components/modals/EditModal';
 import useKeysChain from '../../utils/useKeysChain';
 import useGetById from '../../utils/useGetById';
+import { RootState } from "../../redux/rootReducer";
+import { IArticle } from "../../redux/article/interface";
+import { IAction, Id, Ids } from "../../redux/common/interface";
+import { BreadTree } from "../../redux/category/interface";
 
-const ArticleEditCategory = ( {
+interface ArticleEditCategoryProps {
+  currentArticle: IArticle | null,
+  getByIdCall: ( id: Id ) => IAction<IArticle>;
+  crumbsMap: BreadTree,
+  updateArticleCategoryCall: ( {}: Ids ) => IAction<IArticle>,
+}
+
+const ArticleEditCategory: FC<ArticleEditCategoryProps> = ( {
   currentArticle,
   getByIdCall,
   crumbsMap,
   updateArticleCategoryCall,
-  currentArticleInStore,
 } ) => {
   const history = useHistory();
-  const [catId, setCatId] = useState( null );
+  const [catId, setCatId] = useState<Id | null>( null );
   const { path } = useRouteMatch();
   const entity = path.split( '/' );
-  const { id } = useParams();
+  const { id }: { id: Id } = useParams();
   useGetById( id, getByIdCall );
 
-  if ( !currentArticleInStore ) {
+  if ( !currentArticle ) {
     return null;
   }
 
@@ -38,13 +46,18 @@ const ArticleEditCategory = ( {
   }
 
   const handleClose = () => setCatId( null );
-  const handleShow = ( { key } ) => setCatId( key );
+  const handleShow = ( { key }: { key: string } ) => setCatId( key );
 
   const handleEditCategory = () => {
-    const sendKey = catId
-      .split( '/' )
-      .pop();
-    updateArticleCategoryCall( id, sendKey );
+    let sendKey: string | undefined
+    if (catId) {
+      sendKey = catId
+        .split( '/' )
+        .pop();
+    }
+
+
+    updateArticleCategoryCall( { id, catId: sendKey } as Ids );
     history.push( `/${ entity[1] }` );
   };
 
@@ -64,23 +77,9 @@ const ArticleEditCategory = ( {
   );
 };
 
-ArticleEditCategory.propTypes = {
-  currentArticle: PropTypes.shape( {
-    _id: PropTypes.string,
-    categoryId: PropTypes.string,
-    description: PropTypes.string,
-    mainText: PropTypes.string,
-    title: PropTypes.string,
-  } ).isRequired,
-  currentArticleInStore: PropTypes.bool.isRequired,
-  crumbsMap: PropTypes.objectOf( PropTypes.object ).isRequired,
-  getByIdCall: PropTypes.func.isRequired,
-  updateArticleCategoryCall: PropTypes.func.isRequired,
-};
 
-export default connect( ( state ) => ( {
-  currentArticle: state.article.articleById ? state.article.articleById : {},
-  currentArticleInStore: !!state.article.articleById,
+export default connect( ( state: RootState ) => ( {
+  currentArticle: state.article.articleById,
   crumbsMap: state.category.breadCrumbsTree,
 } ), {
   getByIdCall: getById,

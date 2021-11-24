@@ -1,5 +1,4 @@
-import React, { useEffect } from 'react';
-import PropTypes from 'prop-types';
+import React, { FC, useEffect } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import { Button } from 'react-bootstrap';
 import { connect } from 'react-redux';
@@ -7,19 +6,28 @@ import WrapSimple from '../../components/WrapSimple';
 import BreadCrumbs from '../../components/BreadCrumbs';
 import { deleteArticle, getById } from '../../redux/article/actions';
 import SimpleArticle from './SimpleArticle';
+import { IAction, Id } from '../../redux/common/interface';
+import { IArticle } from '../../redux/article/interface';
+import { RootState } from '../../redux/rootReducer';
 
-const ArticleById = ( {
-  getByIdCall, deleteArticleCall, currentArticle, currentArticleInStore,
+interface ArticleByIdProps {
+  getByIdCall: ( id: Id ) => IAction<IArticle>;
+  deleteArticleCall: ( id: Id ) => IAction<IArticle>;
+  currentArticle: IArticle | null;
+}
+
+const ArticleById: FC<ArticleByIdProps> = ( {
+  getByIdCall, deleteArticleCall, currentArticle,
 } ) => {
-  const { id } = useParams();
+  const { id }: { id: Id } = useParams();
   const history = useHistory();
-  const name = 'article';
+  const name: string = 'article';
 
   useEffect( () => {
     getByIdCall( id );
   }, [getByIdCall, id] );
 
-  if ( !currentArticleInStore ) {
+  if ( !currentArticle ) {
     return null;
   }
 
@@ -44,21 +52,8 @@ const ArticleById = ( {
   );
 };
 
-ArticleById.propTypes = {
-  currentArticle: PropTypes.shape( {
-    _id: PropTypes.string,
-    categoryId: PropTypes.string,
-    description: PropTypes.string,
-    mainText: PropTypes.string,
-    title: PropTypes.string,
-  } ).isRequired,
-  currentArticleInStore: PropTypes.bool.isRequired,
-  getByIdCall: PropTypes.func.isRequired,
-  deleteArticleCall: PropTypes.func.isRequired,
-};
-
-export default connect( ( state ) => ( {
-  currentArticle: state.article.articleById ? state.article.articleById : {},
+export default connect( ( state: RootState ) => ( {
+  currentArticle: state.article.articleById,
   currentArticleInStore: !!state.article.articleById,
 } ), {
   getByIdCall: getById,

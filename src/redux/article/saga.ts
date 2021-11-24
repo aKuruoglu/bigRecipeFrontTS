@@ -13,94 +13,104 @@ import actionTypes from './actionTypes';
 import { setAllArticles, setArticleById, changeRequestStatus } from './slice';
 import { setLoading } from '../common/slice';
 import Notification from '../../utils/Notification';
+import { PayloadAction } from "@reduxjs/toolkit";
+import {IAllArticles, IArticle} from "./interface";
+import {Id, Ids, Pagination, ResponseGenerator} from "../common/interface";
 
-export function* fetchArticlesSaga ( { payload } ) {
+export function* fetchArticlesSaga ( { payload }: PayloadAction<Pagination> ) {
   try {
     yield put( setLoading( true ) );
-    const result = yield call( getAllArticlesApi, payload );
-    yield put( setAllArticles( result.data ) );
+    const result: ResponseGenerator<IAllArticles> = yield call( getAllArticlesApi, payload );
+    yield put( setAllArticles( result.data! ) );
     yield put( setLoading( false ) );
-  } catch ( e ) {
+  } catch ( err ) {
+    const e: any = err;
     yield put( setLoading( false ) );
     const res = e.response.data[0];
     Notification.error( res.message );
   }
 }
 
-export function* fetchArticlesByIdSaga ( { payload } ) {
+export function* fetchArticlesByIdSaga ( { payload }: PayloadAction<{ id: Id }> ) {
   try {
     yield put( setLoading( true ) );
     yield put( setArticleById( null ) );
-    const result = yield call( getArticleByIdApi, payload );
-    yield put( setArticleById( result.data ) );
+    const result: ResponseGenerator<IArticle> = yield call( getArticleByIdApi, payload.id );
+    yield put( setArticleById( result.data! ) );
     yield put( setLoading( false ) );
-  } catch ( e ) {
-    yield put( setLoading( false ) );
-    const res = e.response.data[0];
-    Notification.error( res.message );
-  }
-}
-
-export function* fetchArticlesByCategorySaga ( { payload } ) {
-  try {
-    yield put( setLoading( true ) );
-    const result = yield call( getArticlesByCategoryApi, payload );
-    yield put( setAllArticles( result.data ) );
-    yield put( setLoading( false ) );
-  } catch ( e ) {
+  } catch ( err ) {
+    const e: any = err;
     yield put( setLoading( false ) );
     const res = e.response.data[0];
     Notification.error( res.message );
   }
 }
 
-export function* updateArticleByIdSaga ( { payload } ) {
+export function* fetchArticlesByCategorySaga ( { payload }: PayloadAction<{id: Id, pagination: Pagination }> ) {
   try {
     yield put( setLoading( true ) );
-    yield call( updateArticleApi, payload );
+    const result: ResponseGenerator<IAllArticles> = yield call( getArticlesByCategoryApi, payload.id, payload.pagination );
+    yield put( setAllArticles( result.data! ) );
+    yield put( setLoading( false ) );
+  } catch ( err ) {
+    const e: any = err;
+    yield put( setLoading( false ) );
+    const res = e.response.data[0];
+    Notification.error( res.message );
+  }
+}
+
+export function* updateArticleByIdSaga ( { payload }: PayloadAction<{data: IArticle }> ) {
+  try {
+    yield put( setLoading( true ) );
+    yield call( updateArticleApi, payload.data );
     yield put( setLoading( false ) );
     Notification.success( 'Success updating article' );
-  } catch ( e ) {
+  } catch ( err ) {
+    const e: any = err;
     yield put( setLoading( false ) );
     const res = e.response.data[0];
     Notification.error( res.message );
   }
 }
 
-export function* updateArticleCategorySaga ( { payload } ) {
+export function* updateArticleCategorySaga ( { payload }: PayloadAction<Ids> ) {
   try {
     yield put( setLoading( true ) );
-    const result = yield call( updateArticleCategoryApi, payload );
-    yield put( setArticleById( result.data ) );
+    const result: ResponseGenerator<IArticle> = yield call( updateArticleCategoryApi, payload );
+    yield put( setArticleById( result.data! ) );
     yield put( setLoading( false ) );
     Notification.success( 'Success updating category' );
-  } catch ( e ) {
+  } catch ( err ) {
+    const e: any = err;
     yield put( setLoading( false ) );
     const res = e.response.data[0];
     Notification.error( res.message );
   }
 }
 
-export function* addArticleByIdSaga ( { payload } ) {
+export function* addArticleByIdSaga ( { payload }: PayloadAction<{ data: IArticle }> ) {
   try {
     yield put( setLoading( true ) );
-    yield call( addArticleApi, payload );
+    yield call( addArticleApi, payload.data );
     yield put( setLoading( false ) );
     Notification.success( 'Success adding' );
-  } catch ( e ) {
+  } catch ( err ) {
+    const e: any = err;
     yield put( setLoading( false ) );
     const res = e.response.data[0];
     Notification.error( res.message );
   }
 }
 
-export function* deleteArticleSaga ( { payload } ) {
+export function* deleteArticleSaga ( { payload }: PayloadAction<{ id: Id }> ) {
   try {
     yield put( setLoading( true ) );
-    yield call( deleteArticleApi, payload );
+    yield call( deleteArticleApi, payload.id );
     yield put( setLoading( false ) );
     yield put( changeRequestStatus( 'success' ) );
-  } catch ( e ) {
+  } catch ( err ) {
+    const e: any = err;
     yield put( setLoading( false ) );
     const res = e.response.data[0];
     Notification.error( res.message );

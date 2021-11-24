@@ -1,34 +1,50 @@
-import React, { useEffect } from 'react';
-import { get } from 'lodash';
+import React, {useEffect, FC} from 'react';
+import get from 'lodash-ts/get';
 import { connect } from 'react-redux';
 import { Button } from 'react-bootstrap';
 import ReactPaginate from 'react-paginate';
 import { useHistory, useParams } from 'react-router-dom';
-import PropTypes from 'prop-types';
 
 import { pageLimit } from '../../config';
 import WrapMain from '../../components/WrapMain';
 import EntityItem from '../../components/EntityItem';
 import { changeRequestStatus } from '../../redux/article/slice';
 import { deleteArticle, getAllArticles, getArticlesByCategory } from '../../redux/article/actions';
+import { RootState } from "../../redux/rootReducer";
+import { IAllArticles, IArticle } from "../../redux/article/interface";
+import {
+  deleteEntityType,
+  getAllEntityType,
+  getArticleByCategoryType, IAllEntities,
+  Id,
+} from "../../redux/common/interface";
 
-const Article = ( {
+interface ArticleProps {
+  getAllArticleCall: getAllEntityType<IArticle>,
+  allArticles: IAllEntities<IArticle> | null,
+  deleteArticleCall: deleteEntityType<IArticle>,
+  getArticleByCategoryCall: getArticleByCategoryType<IArticle>,
+  status: string,
+  changeStatus: ( str: string ) => void,
+}
+
+const Article: FC<ArticleProps> = ( {
   getAllArticleCall,
   allArticles,
-  articleInStore,
   deleteArticleCall,
   getArticleByCategoryCall,
   status,
   changeStatus,
-} ) => {
-  const name = 'article';
-  const { catId, page = 1 } = useParams();
+}) => {
+
+  const name: string = 'article';
+  const { catId, page = '1' }: { catId: Id, page: string } = useParams();
   const history = useHistory();
 
   const currentPage = +page - 1;
 
-  const changePage = ( { selected } ) => {
-    const pageNumber = +selected + 1;
+  const changePage = ( { selected }: { selected: number } ) => {
+    const pageNumber: number = +selected + 1;
     if ( pageNumber !== +page ) {
       if ( !catId ) {
         history.push( `/${ name }/page/${ pageNumber }` );
@@ -50,22 +66,22 @@ const Article = ( {
 
     if ( !catId ) {
       getAllArticleCall( {
-        page: currentPage,
-        limit: pageLimit,
+        page: currentPage.toString(),
+        limit: pageLimit!,
       } );
     } else {
-      getArticleByCategoryCall( catId, currentPage, pageLimit );
+      getArticleByCategoryCall( catId, { page: currentPage.toString(), limit: pageLimit! }  );
     }
   }, [catId, getAllArticleCall, getArticleByCategoryCall, currentPage, status, changeStatus] );
 
-  if ( !articleInStore ) {
+  if ( !allArticles ) {
     return null;
   }
-  const { entities, total } = allArticles;
+  const { entities, total }: IAllArticles = allArticles;
 
-  let pageCount;
-  if ( total > pageLimit ) {
-    pageCount = Math.ceil( total / pageLimit - 1 );
+  let pageCount: number;
+  if ( total > +pageLimit! ) {
+    pageCount = Math.ceil( total / +pageLimit! - 1 );
   } else {
     pageCount = 1;
   }
@@ -112,29 +128,9 @@ const Article = ( {
   );
 };
 
-Article.propTypes = {
-  allArticles: PropTypes.shape( {
-    entities: PropTypes.arrayOf( PropTypes.shape( {
-      _id: PropTypes.string,
-      categoryId: PropTypes.string,
-      description: PropTypes.string,
-      mainText: PropTypes.string,
-      title: PropTypes.string,
-    } ) ),
-    total: PropTypes.number,
-  } ).isRequired,
-  articleInStore: PropTypes.bool.isRequired,
-  status: PropTypes.string.isRequired,
-  getAllArticleCall: PropTypes.func.isRequired,
-  deleteArticleCall: PropTypes.func.isRequired,
-  getArticleByCategoryCall: PropTypes.func.isRequired,
-  changeStatus: PropTypes.func.isRequired,
-};
-
-export default connect( ( state ) => ( {
-  allArticles: state.article.allArticles ? state.article.allArticles : {},
-  articleInStore: !!state.article.allArticles,
-  status: state.article.requestStatus,
+export default connect( ( state: RootState ) => ( {
+  allArticles: state.article.allArticles,
+  status: state.article.requestStatus as string,
 } ), {
   getAllArticleCall: getAllArticles,
   deleteArticleCall: deleteArticle,

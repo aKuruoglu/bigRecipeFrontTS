@@ -1,17 +1,25 @@
-import React, { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
+import React, { FC, useEffect, useState, ReactNode } from 'react';
 import { connect } from 'react-redux';
 import TreeMenu from 'react-simple-tree-menu';
 import 'react-simple-tree-menu/dist/main.css';
-import { getById } from '../../redux/recipe/actions';
+import { ICategoryTree } from '../../redux/category/interface';
+import { RootState } from "../../redux/rootReducer";
 
-const CategoryTree = ( { categoryTree, initialActiveKey, onClickItem = null } ) => {
-  const [tree, setTree] = useState( null );
+export type onClickItem = ( { key }: { key: string } ) => void;
+
+export interface CategoryTreeProps {
+  categoryTree: ICategoryTree[];
+  initialActiveKey: string;
+  onClickItem: onClickItem
+}
+
+const CategoryTree: FC<CategoryTreeProps> = ( { categoryTree, initialActiveKey, onClickItem } ) => {
+  const [tree, setTree] = useState<ReactNode>( null );
 
   useEffect( () => {
     let options = {};
 
-    if ( !categoryTree.length ) {
+    if ( !categoryTree!.length ) {
       return;
     }
 
@@ -32,16 +40,11 @@ const CategoryTree = ( { categoryTree, initialActiveKey, onClickItem = null } ) 
     /> );
   }, [categoryTree, initialActiveKey, onClickItem] );
 
-  return tree;
+  return <>
+    {tree}
+  </>;
 };
 
-CategoryTree.propTypes = {
-  categoryTree: PropTypes.arrayOf( PropTypes.object ).isRequired,
-  getByIdCall: PropTypes.func.isRequired,
-};
-
-export default connect( ( state ) => ( {
+export default connect(( state: RootState ) => ({
   categoryTree: state.category.categoriesTree,
-} ), {
-  getByIdCall: getById,
-} )( CategoryTree );
+}))( CategoryTree );

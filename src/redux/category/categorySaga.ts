@@ -8,75 +8,86 @@ import { setAllCategory, setCategoryById } from './categorySlice';
 import categoryActionsTypes from './categoryActionsTypes';
 import Notification from '../../utils/Notification';
 import { setLoading } from '../common/slice';
+import { Category } from './interface';
+import {PayloadAction} from "@reduxjs/toolkit";
+import { History } from 'history';
+import {Id, ResponseGenerator} from "../common/interface";
 
 export function* fetchCategoriesSaga () {
   try {
     yield put( setLoading( true ) );
-    const result = yield call( getAllCategories );
-    yield put( setAllCategory( result.data ) );
+    const result: ResponseGenerator<Category[]> = yield call( getAllCategories );
+    yield put( setAllCategory( result.data! ) );
     yield put( setLoading( false ) );
-  } catch ( e ) {
-    yield put( setLoading( false ) );
-    const res = e.response.data[0];
-    Notification.error( res.message );
-  }
-}
-
-export function* fetchCategoryByIdSaga ( { payload } ) {
-  try {
-    yield put( setLoading( true ) );
-    const result = yield call( getById, payload.id );
-    yield put( setCategoryById( result.data ) );
-    yield put( setLoading( false ) );
-  } catch ( e ) {
+  } catch ( err ) {
+    const e: any = err;
     yield put( setLoading( false ) );
     const res = e.response.data[0];
     Notification.error( res.message );
   }
 }
 
-export function* sendEditCategorySaga ( { payload } ) {
+export function* fetchCategoryByIdSaga ( { payload }: PayloadAction<{ id: Id }> ) {
   try {
     yield put( setLoading( true ) );
-    const edit = yield call( editCategory, payload );
-    yield put( setCategoryById( edit.data ) );
-    const result = yield call( getAllCategories );
-    yield put( setAllCategory( result.data ) );
+    const result: ResponseGenerator<Category> = yield call( getById, payload.id );
+    yield put( setCategoryById( result.data! ) );
+    yield put( setLoading( false ) );
+  } catch ( err ) {
+    const e: any = err;
+    yield put( setLoading( false ) );
+    const res = e.response.data[0];
+    Notification.error( res.message );
+  }
+}
+
+export function* sendEditCategorySaga ( { payload }: PayloadAction<{ id: Id, data: Category, history: History }>  ) {
+  try {
+    yield put( setLoading( true ) );
+    const edit: ResponseGenerator<Category>  = yield call( editCategory, payload );
+    yield put( setCategoryById( edit.data! ) );
+    const result: ResponseGenerator<Category[]> = yield call( getAllCategories );
+    yield put( setAllCategory( result.data! ) );
     yield put( setLoading( false ) );
     Notification.success( 'Success update' );
+    // @ts-ignore
     payload.history.push( '/category' );
-  } catch ( e ) {
+  } catch ( err ) {
+    const e: any = err;
     yield put( setLoading( false ) );
     const res = e.response.data[0];
     Notification.error( res.message );
   }
 }
 
-export function* deleteCategorySaga ( { payload } ) {
+export function* deleteCategorySaga ( { payload }: PayloadAction<{ id: Id }> ) {
   try {
     yield put( setLoading( true ) );
-    yield call( deleteCategory, payload );
-    const result = yield call( getAllCategories );
-    yield put( setAllCategory( result.data ) );
+    yield call( deleteCategory, payload.id );
+    const result: ResponseGenerator<Category[]> = yield call( getAllCategories );
+    yield put( setAllCategory( result.data! ) );
     yield put( setLoading( false ) );
     Notification.success( 'Successful deletion' );
-  } catch ( e ) {
+  } catch ( err ) {
+    const e: any = err;
     yield put( setLoading( false ) );
     const res = e.response.data[0];
     Notification.error( res.message );
   }
 }
 
-export function* addCategorySaga ( { payload } ) {
+export function* addCategorySaga ( { payload }: PayloadAction<{ data: Category, history: History }> ) {
   try {
     yield put( setLoading( true ) );
-    yield call( addCategory, payload );
-    const result = yield call( getAllCategories );
-    yield put( setAllCategory( result.data ) );
+    yield call( addCategory, payload.data );
+    const result: ResponseGenerator<Category[]> = yield call( getAllCategories );
+    yield put( setAllCategory( result.data! ) );
     yield put( setLoading( false ) );
     Notification.success( 'Successful addition' );
+    // @ts-ignore
     payload.history.push( '/category' );
-  } catch ( e ) {
+  } catch ( err ) {
+    const e: any = err;
     yield put( setLoading( false ) );
     const res = e.response.data[0];
     Notification.error( res.message );

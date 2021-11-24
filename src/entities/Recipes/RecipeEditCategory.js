@@ -47,7 +47,7 @@ const RecipeEditCategory = ( {
     const sendKey = catId
       .split( '/' )
       .pop();
-    updateRecipeCategoryCall( id, sendKey );
+    updateRecipeCategoryCall( { id, catId: sendKey } );
     history.push( `/${ entity[1] }` );
   };
 

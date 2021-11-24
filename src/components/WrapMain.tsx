@@ -1,19 +1,31 @@
-import React, { useCallback } from 'react';
-import PropTypes from 'prop-types';
+import React, { FC, ReactElement, ReactNode, useCallback } from 'react';
 import { connect } from 'react-redux';
 import {
   useHistory, useParams,
 } from 'react-router-dom';
 
-import CategoryTree from './category/CategoryTree';
+import CategoryTree, { onClickItem } from './category/CategoryTree';
 import { getRecipesByCategory } from '../redux/recipe/actions';
 import useKeysChain from '../utils/useKeysChain';
+import { Id } from '../redux/common/interface';
+import { BreadTree } from '../redux/category/interface';
+import {RootState} from '../redux/rootReducer';
 
-const WrapMain = ( { children, crumbsMap, entity } ) => {
+interface WrapMainProps {
+  crumbsMap?: BreadTree;
+  entity: string;
+  children?: ReactNode | ReactElement
+}
+
+const WrapMain: FC<WrapMainProps> = ( {
+  children,
+  crumbsMap,
+  entity
+} ) => {
   const history = useHistory();
-  const { catId } = useParams();
+  const { catId }: { catId: Id }= useParams();
 
-  const handleClick = useCallback( ( { key } ) => {
+  const handleClick = useCallback<onClickItem>( ( { key }: { key: string } ) => {
     const sendKey = key
       .split( '/' )
       .pop();
@@ -27,7 +39,7 @@ const WrapMain = ( { children, crumbsMap, entity } ) => {
       <div className="row h-100">
 
         <nav className="col-lg-4 col-md-5 col-sm-6">
-          <CategoryTree onClickItem={ handleClick } initialActiveKey={ keysChain } />
+          <CategoryTree initialActiveKey={ keysChain } onClickItem={ handleClick } />
         </nav>
 
         <div className="col-lg-8 col-md-7 col-sm-6">
@@ -39,13 +51,7 @@ const WrapMain = ( { children, crumbsMap, entity } ) => {
   );
 };
 
-WrapMain.propTypes = {
-  crumbsMap: PropTypes.objectOf( PropTypes.object ).isRequired,
-  entity: PropTypes.string.isRequired,
-  children: PropTypes.arrayOf( PropTypes.element ).isRequired,
-};
-
-export default connect( ( state ) => ( {
+export default connect( ( state: RootState ) => ( {
   crumbsMap: state.category.breadCrumbsTree,
 } ), {
   getRecipesByCategoryCall: getRecipesByCategory,

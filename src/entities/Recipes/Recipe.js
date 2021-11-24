@@ -58,7 +58,7 @@ const Recipe = ( {
         limit: pageLimit,
       } );
     } else {
-      getRecipesByCategoryCall( catId, currentPage, pageLimit );
+      getRecipesByCategoryCall( catId, { page: currentPage, limit: pageLimit } );
     }
   }, [allRecipeCall, catId, getRecipesByCategoryCall, currentPage, status, changeStatus] );
 

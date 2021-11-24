@@ -1,12 +1,19 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
+import React, { FC, ReactNode, useCallback, useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import { get } from 'lodash';
+import get  from 'lodash-ts/get';
 import { useHistory } from 'react-router-dom';
+import { RootState } from "../redux/rootReducer";
+import { BreadTree } from "../redux/category/interface";
 
-const BreadCrumbs = ( { entityById, crumbsArray, entity } ) => {
+interface BreadCrumbsProps {
+  entityById?: any
+  crumbsArray?: BreadTree
+  entity: string
+}
+
+const BreadCrumbs: FC<BreadCrumbsProps> = ( { entityById, crumbsArray, entity } ) => {
   const history = useHistory();
-  const [bread, setBread] = useState();
+  const [bread, setBread] = useState<ReactNode[]>();
 
   const moveToCategoryId = useCallback( ( id ) => ( ) => {
     history.push( `/${ entity }/category/${ id }` );
@@ -17,8 +24,8 @@ const BreadCrumbs = ( { entityById, crumbsArray, entity } ) => {
       return;
     }
 
-    let category = crumbsArray[entityById.categoryId];
-    const res = [];
+    let category = crumbsArray![entityById.categoryId];
+    const res: ReactNode[] = [];
 
     while ( category ) {
       res.unshift(
@@ -27,28 +34,25 @@ const BreadCrumbs = ( { entityById, crumbsArray, entity } ) => {
           className="breadcrumb-item crumbs"
           onClick={ moveToCategoryId( category._id ) }
         >
-          {category.name}
+          { category.name }
         </div> ),
       );
 
-      category = category.parent;
+      category = category.parent!;
     }
 
     setBread( res );
   }, [crumbsArray, moveToCategoryId, entityById] );
   return (
     <div className="d-flex mt-2 breadcrumb">
-      {bread}
+      { bread }
     </div>
   );
 };
 
-BreadCrumbs.propTypes = {
-  crumbsArray: PropTypes.objectOf( PropTypes.object ).isRequired,
-  entity: PropTypes.string.isRequired,
-};
 
-export default connect( ( state, { entity } ) => ( {
+
+export default connect( ( state: RootState, { entity }: { entity: string } ) => ( {
   entityById: get( state, `${ entity }.${ entity }ById` ),
   crumbsArray: state.category.breadCrumbsTree,
 } ), null )( BreadCrumbs );

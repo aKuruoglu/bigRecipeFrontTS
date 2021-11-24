@@ -1,4 +1,4 @@
-import { isObject, transform } from 'lodash';
+import { isObject, transform, keys } from 'lodash';
 
 export const buildCategoryTree = ( array, tree = true ) => {
   const categoriesMap = array.reduce( ( mask, item ) => ( {
@@ -43,3 +43,8 @@ export const replaceKeysDeep = ( obj, keysMap ) => transform( obj, ( result, val
   // eslint-disable-next-line no-param-reassign
   result[currentKey] = isObject( value ) ? replaceKeysDeep( value, keysMap ) : value;
 } );
+
+export const omit = ( originalObj = {}, keysToOmit = [] ) => Object.fromEntries(
+  Object.entries( originalObj )
+    .filter( ( [key] ) => !keysToOmit.includes( key ) ),
+);

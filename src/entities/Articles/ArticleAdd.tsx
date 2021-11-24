@@ -1,15 +1,20 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, {FC} from 'react';
 import { connect } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 
 import WrapSimple from '../../components/WrapSimple';
 import { addArticle } from '../../redux/article/actions';
 import ArticleForm from './components/ArticleForm';
+import { IArticle } from "../../redux/article/interface";
+import { IAction } from "../../redux/common/interface";
 
-const ArticleAdd = ( { addArticleCall } ) => {
+interface ArticleAddProps {
+  addArticleCall: ( {}: IArticle ) => IAction<IArticle>
+}
+
+const ArticleAdd: FC<ArticleAddProps> = ( { addArticleCall } ) => {
   const history = useHistory();
-  const onSubmit = ( values ) => {
+  const onSubmit = ( values: IArticle ) => {
     addArticleCall( values );
     history.push( '/article' );
   };
@@ -21,10 +26,6 @@ const ArticleAdd = ( { addArticleCall } ) => {
       />
     </WrapSimple>
   );
-};
-
-ArticleAdd.propTypes = {
-  addArticleCall: PropTypes.func.isRequired,
 };
 
 export default connect( null, {

@@ -19,7 +19,7 @@ module.exports = {
     semi: ['error', 'always'],
     camelcase: ['warn', { properties: 'always' }],
     'space-before-function-paren': ['error', 'always'],
-    'react/jsx-filename-extension': [1, { extensions: ['.js', '.jsx'] }],
+    'react/jsx-filename-extension': [1, { extensions: ['.js', '.jsx', '.ts', ',tsx'] }],
     'react/jsx-tag-spacing': ['error', {
       beforeSelfClosing: 'always', closingSlash: 'never', afterOpening: 'never', beforeClosing: 'never',
     }],
@@ -40,6 +40,8 @@ module.exports = {
     'react/jsx-closing-tag-location': 'off',
     'react/jsx-props-no-spreading': 'off',
     'class-methods-use-this': 'off',
+    'import/no-unresolved': 'off',
+    'import/extensions': 'off',
     'jsx-a11y/label-has-associated-control': [2, {
       labelComponents: ['label'],
       labelAttributes: ['htmlFor'],

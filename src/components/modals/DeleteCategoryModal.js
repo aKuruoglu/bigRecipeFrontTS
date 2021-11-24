@@ -14,14 +14,14 @@ const DeleteCategoryModal = ( {
       <div>
         This category has
         {' '}
-        {currentCategory.articlesCount}
+        {currentCategory.articleCount}
         {' '}
         articles
       </div>
       <div>
         This category has
         {' '}
-        {currentCategory.recipesCount}
+        {currentCategory.recipeCount}
         {' '}
         recipes
       </div>
@@ -42,8 +42,8 @@ DeleteCategoryModal.propTypes = {
     _id: PropTypes.string,
     parentCategoryId: PropTypes.string,
     name: PropTypes.string,
-    articlesCount: PropTypes.number,
-    recipesCount: PropTypes.number,
+    articleCount: PropTypes.number,
+    recipeCount: PropTypes.number,
   } ).isRequired,
   show: PropTypes.bool.isRequired,
   handleClose: PropTypes.func.isRequired,

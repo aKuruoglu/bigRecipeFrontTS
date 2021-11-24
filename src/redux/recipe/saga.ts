@@ -12,92 +12,102 @@ import actionTypes from './actionTypes';
 import { changeRequestStatus, setAllRecipes, setRecipeById } from './slice';
 import { setLoading } from '../common/slice';
 import Notification from '../../utils/Notification';
+import { PayloadAction } from "@reduxjs/toolkit";
+import { Id, Ids, Pagination, ResponseGenerator } from "../common/interface";
+import { Recipe } from "./interface";
 
-export function* fetchRecipesSaga ( { payload } ) {
+export function* fetchRecipesSaga ( { payload }: PayloadAction<Pagination> ) {
   try {
     yield put( setLoading( true ) );
-    const result = yield call( getAllRecipesApi, payload );
-    yield put( setAllRecipes( result.data ) );
+    const result: ResponseGenerator<Recipe[]> = yield call( getAllRecipesApi, payload );
+    yield put( setAllRecipes( result.data! ) );
     yield put( setLoading( false ) );
-  } catch ( e ) {
+  } catch ( err ) {
+    const e: any = err;
     yield put( setLoading( false ) );
     const res = e.response.data[0];
     Notification.error( res.message );
   }
 }
 
-export function* fetchRecipesByIdSaga ( { payload } ) {
+export function* fetchRecipesByIdSaga ( { payload }: PayloadAction<{ id: Id }> ) {
   try {
     yield put( setLoading( true ) );
     yield put( setRecipeById( null ) );
-    const result = yield call( getRecipeByIdApi, payload );
-    yield put( setRecipeById( result.data ) );
+    const result: ResponseGenerator<Recipe> = yield call( getRecipeByIdApi, payload.id );
+    yield put( setRecipeById( result.data! ) );
     yield put( setLoading( false ) );
-  } catch ( e ) {
-    yield put( setLoading( false ) );
-    const res = e.response.data[0];
-    Notification.error( res.message );
-  }
-}
-
-export function* fetchRecipesByCategorySaga ( { payload } ) {
-  try {
-    yield put( setLoading( true ) );
-    const result = yield call( getRecipesByCategoryApi, payload );
-    yield put( setAllRecipes( result.data ) );
-    yield put( setLoading( false ) );
-  } catch ( e ) {
+  } catch ( err ) {
+    const e: any = err;
     yield put( setLoading( false ) );
     const res = e.response.data[0];
     Notification.error( res.message );
   }
 }
 
-export function* updateRecipeByIdSaga ( { payload } ) {
+export function* fetchRecipesByCategorySaga ( { payload }: PayloadAction<{id: Id, pagination: Pagination }> ) {
   try {
     yield put( setLoading( true ) );
-    yield call( updateRecipeApi, payload );
+    const result: ResponseGenerator<Recipe[]> = yield call( getRecipesByCategoryApi, payload.id, payload.pagination );
+    yield put( setAllRecipes( result.data! ) );
     yield put( setLoading( false ) );
-  } catch ( e ) {
+  } catch ( err ) {
+    const e: any = err;
     yield put( setLoading( false ) );
     const res = e.response.data[0];
     Notification.error( res.message );
   }
 }
 
-export function* updateRecipeCategorySaga ( { payload } ) {
+export function* updateRecipeByIdSaga ( { payload }: PayloadAction<{ data: Recipe }> ) {
   try {
     yield put( setLoading( true ) );
-    const result = yield call( updateRecipeCategoryApi, payload );
-    yield put( setRecipeById( result.data ) );
+    yield call( updateRecipeApi, payload.data );
     yield put( setLoading( false ) );
-  } catch ( e ) {
+  } catch ( err ) {
+    const e: any = err;
     yield put( setLoading( false ) );
     const res = e.response.data[0];
     Notification.error( res.message );
   }
 }
 
-export function* addRecipeByIdSaga ( { payload } ) {
+export function* updateRecipeCategorySaga ( { payload }: PayloadAction<Ids> ) {
   try {
     yield put( setLoading( true ) );
-    yield call( addRecipeApi, payload );
+    const result: ResponseGenerator<Recipe> = yield call( updateRecipeCategoryApi, payload );
+    yield put( setRecipeById( result.data! ) );
     yield put( setLoading( false ) );
-  } catch ( e ) {
+  } catch ( err ) {
+    const e: any = err;
     yield put( setLoading( false ) );
     const res = e.response.data[0];
     Notification.error( res.message );
   }
 }
 
-export function* deleteRecipeSaga ( { payload } ) {
+export function* addRecipeByIdSaga ( { payload }: PayloadAction<{ data: Recipe }> ) {
   try {
     yield put( setLoading( true ) );
-    yield call( deleteRecipeApi, payload );
+    yield call( addRecipeApi, payload.data );
+    yield put( setLoading( false ) );
+  } catch ( err ) {
+    const e: any = err;
+    yield put( setLoading( false ) );
+    const res = e.response.data[0];
+    Notification.error( res.message );
+  }
+}
+
+export function* deleteRecipeSaga ( { payload }: PayloadAction<{ id: Id }> ) {
+  try {
+    yield put( setLoading( true ) );
+    yield call( deleteRecipeApi, payload.id );
     yield put( setLoading( false ) );
     yield put( changeRequestStatus( 'success' ) );
     Notification.success( 'Success deleting' );
-  } catch ( e ) {
+  } catch ( err ) {
+    const e: any = err;
     yield put( setLoading( false ) );
     const res = e.response.data[0];
     Notification.error( res.message );
