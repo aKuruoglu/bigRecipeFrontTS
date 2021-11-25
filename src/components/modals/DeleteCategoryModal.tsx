@@ -1,12 +1,12 @@
-import React, {FC} from 'react';
+import React, {ChangeEvent, FC, MouseEvent} from 'react';
 import { Button, Modal } from 'react-bootstrap';
 import { ICategory } from "../../redux/category/interface";
 
 interface Props {
-  currentCategory: ICategory;
+  currentCategory: ICategory | null;
   show: boolean;
   handleClose: () => void;
-  handleDelete: () => void;
+  handleDelete: (e: MouseEvent<HTMLElement>) => void;
 }
 
 const DeleteCategoryModal: FC<Props> = ( {
@@ -21,14 +21,14 @@ const DeleteCategoryModal: FC<Props> = ( {
       <div>
         This category has
         {' '}
-        {currentCategory.articleCount}
+        {currentCategory?.articleCount}
         {' '}
         articles
       </div>
       <div>
         This category has
         {' '}
-        {currentCategory.recipeCount}
+        {currentCategory?.recipeCount}
         {' '}
         recipes
       </div>

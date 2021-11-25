@@ -1,5 +1,4 @@
 import React, {FC} from 'react';
-import PropTypes from 'prop-types';
 import TreeMenu from 'react-simple-tree-menu';
 import { connect } from 'react-redux';
 import { Button } from 'react-bootstrap';

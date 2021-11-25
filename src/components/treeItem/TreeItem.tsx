@@ -1,15 +1,25 @@
-import React, { useCallback, useState } from 'react';
+import React, {FC, useCallback, useState, ChangeEvent, MouseEvent} from 'react';
 import { Button } from 'react-bootstrap';
 import { useHistory } from 'react-router-dom';
 import 'react-simple-tree-menu/dist/main.css';
 import { connect } from 'react-redux';
 import { deleteCategory, getById } from '../../redux/category/action';
 import DeleteCategoryModal from '../modals/DeleteCategoryModal';
+import { RootState } from "../../redux/rootReducer";
+import { deleteEntityType, IAction, Id } from "../../redux/common/interface";
+import { ICategory } from "../../redux/category/interface";
 
 /* eslint-disable react/destructuring-assignment */
 /* eslint-disable no-unused-expressions */
 
-const TreeItem = ( {
+interface Props {
+  item: any
+  deleteCategoryCall: deleteEntityType<ICategory>;
+  categoryById: ICategory | null;
+  fetchCategoryById: ( id: Id ) => IAction<ICategory>;
+}
+
+const TreeItem: FC<Props> = ( {
   item, deleteCategoryCall, categoryById, fetchCategoryById,
 } ) => {
   const {
@@ -33,7 +43,7 @@ const TreeItem = ( {
     setShow( true );
   };
 
-  const handleDelete = ( e ) => {
+  const handleDelete = ( e: MouseEvent<HTMLElement> ) => {
     e.stopPropagation();
     deleteCategoryCall( handleKey() );
     setShow( false );
@@ -43,7 +53,7 @@ const TreeItem = ( {
     history.push( `/category/edit/${ handleKey() }` );
   };
 
-  const ToggleIcon = ( { on } ) => (
+  const ToggleIcon = ( { on }: {on: boolean} ) => (
     <span
       style={ { marginRight: 10 } }
       onClick={ ( e ) => {
@@ -54,9 +64,9 @@ const TreeItem = ( {
       {on ? '-' : '+'}
     </span>
   );
-  if ( !categoryById ) {
-    return null;
-  }
+  // if ( !categoryById ) {
+  //   return null;
+  // }
 
   return (
     <div className="rstm-tree-item">
@@ -84,43 +94,10 @@ const TreeItem = ( {
     </div>
   );
 };
-//
-// TreeItem.propTypes = {
-//   item: PropTypes.shape( {
-//     hasNodes: PropTypes.bool,
-//     toggleNode: PropTypes.func,
-//     key: PropTypes.string,
-//     isOpen: PropTypes.bool,
-//     label: PropTypes.string,
-//     active: PropTypes.bool,
-//     focused: PropTypes.bool,
-//     index: PropTypes.number,
-//     level: PropTypes.number,
-//     onClick: PropTypes.func,
-//     openNodes: PropTypes.arrayOf( PropTypes.string ),
-//     parent: PropTypes.string,
-//     parentCategoryId: PropTypes.oneOfType( [
-//       PropTypes.oneOf( [null] ),
-//       PropTypes.string,
-//     ] ),
-//   } ).isRequired,
-//   deleteCategoryCall: PropTypes.func.isRequired,
-//   fetchCategoryById: PropTypes.func.isRequired,
-//   categoryById: PropTypes.shape( {
-//     _id: PropTypes.string,
-//     parentCategoryId: PropTypes.string,
-//     name: PropTypes.string,
-//     articlesCount: PropTypes.number,
-//     recipesCount: PropTypes.number,
-//   } ),
-// };
-//
-// TreeItem.defaultProps = {
-//   categoryById: {},
-// };
 
-export default connect( ( state ) => ( {
-  categoryById: state.category.categoryById ? state.category.categoryById : {},
+
+export default connect( ( state: RootState ) => ( {
+  categoryById: state.category.categoryById,
 } ), {
   deleteCategoryCall: deleteCategory,
   fetchCategoryById: getById,
