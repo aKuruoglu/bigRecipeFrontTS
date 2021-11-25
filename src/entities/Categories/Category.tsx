@@ -1,12 +1,18 @@
-import React from 'react';
+import React, {FC} from 'react';
 import PropTypes from 'prop-types';
 import TreeMenu from 'react-simple-tree-menu';
 import { connect } from 'react-redux';
 import { Button } from 'react-bootstrap';
 import { useHistory } from 'react-router-dom';
 import TreeItem from '../../components/treeItem/TreeItem';
+import {ICategoryTree} from "../../redux/category/interface";
+import {RootState} from "../../redux/rootReducer";
 
-const Category = ( { treeData } ) => {
+interface CategoryProps {
+  treeData: ICategoryTree[]
+}
+
+const Category: FC<CategoryProps> = ( { treeData } ) => {
   const history = useHistory();
   const moveToAdd = () => {
     history.push( '/category/add' );
@@ -24,7 +30,6 @@ const Category = ( { treeData } ) => {
                   <TreeItem key={ item.key } item={ item } />
                 ) )}
               </>
-
             )}
           </TreeMenu>
         </div>
@@ -35,10 +40,6 @@ const Category = ( { treeData } ) => {
   );
 };
 
-Category.propTypes = {
-  treeData: PropTypes.arrayOf( PropTypes.object ).isRequired,
-};
-
-export default connect( ( state ) => ( {
+export default connect( ( state: RootState ) => ( {
   treeData: state.category.categoriesTree,
 } ) )( Category );

@@ -8,15 +8,15 @@ import { setAllCategory, setCategoryById } from './categorySlice';
 import categoryActionsTypes from './categoryActionsTypes';
 import Notification from '../../utils/Notification';
 import { setLoading } from '../common/slice';
-import { Category } from './interface';
+import { ICategory } from './interface';
 import {PayloadAction} from "@reduxjs/toolkit";
 import { History } from 'history';
-import {Id, ResponseGenerator} from "../common/interface";
+import { Id, ResponseGenerator } from "../common/interface";
 
 export function* fetchCategoriesSaga () {
   try {
     yield put( setLoading( true ) );
-    const result: ResponseGenerator<Category[]> = yield call( getAllCategories );
+    const result: ResponseGenerator<ICategory[]> = yield call( getAllCategories );
     yield put( setAllCategory( result.data! ) );
     yield put( setLoading( false ) );
   } catch ( err ) {
@@ -30,7 +30,7 @@ export function* fetchCategoriesSaga () {
 export function* fetchCategoryByIdSaga ( { payload }: PayloadAction<{ id: Id }> ) {
   try {
     yield put( setLoading( true ) );
-    const result: ResponseGenerator<Category> = yield call( getById, payload.id );
+    const result: ResponseGenerator<ICategory> = yield call( getById, payload.id );
     yield put( setCategoryById( result.data! ) );
     yield put( setLoading( false ) );
   } catch ( err ) {
@@ -41,12 +41,12 @@ export function* fetchCategoryByIdSaga ( { payload }: PayloadAction<{ id: Id }> 
   }
 }
 
-export function* sendEditCategorySaga ( { payload }: PayloadAction<{ id: Id, data: Category, history: History }>  ) {
+export function* sendEditCategorySaga ( { payload }: PayloadAction<{ id: Id, data: ICategory, history: History }>  ) {
   try {
     yield put( setLoading( true ) );
-    const edit: ResponseGenerator<Category>  = yield call( editCategory, payload );
+    const edit: ResponseGenerator<ICategory>  = yield call( editCategory, payload );
     yield put( setCategoryById( edit.data! ) );
-    const result: ResponseGenerator<Category[]> = yield call( getAllCategories );
+    const result: ResponseGenerator<ICategory[]> = yield call( getAllCategories );
     yield put( setAllCategory( result.data! ) );
     yield put( setLoading( false ) );
     Notification.success( 'Success update' );
@@ -64,7 +64,7 @@ export function* deleteCategorySaga ( { payload }: PayloadAction<{ id: Id }> ) {
   try {
     yield put( setLoading( true ) );
     yield call( deleteCategory, payload.id );
-    const result: ResponseGenerator<Category[]> = yield call( getAllCategories );
+    const result: ResponseGenerator<ICategory[]> = yield call( getAllCategories );
     yield put( setAllCategory( result.data! ) );
     yield put( setLoading( false ) );
     Notification.success( 'Successful deletion' );
@@ -76,11 +76,11 @@ export function* deleteCategorySaga ( { payload }: PayloadAction<{ id: Id }> ) {
   }
 }
 
-export function* addCategorySaga ( { payload }: PayloadAction<{ data: Category, history: History }> ) {
+export function* addCategorySaga ( { payload }: PayloadAction<{ data: ICategory, history: History }> ) {
   try {
     yield put( setLoading( true ) );
     yield call( addCategory, payload.data );
-    const result: ResponseGenerator<Category[]> = yield call( getAllCategories );
+    const result: ResponseGenerator<ICategory[]> = yield call( getAllCategories );
     yield put( setAllCategory( result.data! ) );
     yield put( setLoading( false ) );
     Notification.success( 'Successful addition' );

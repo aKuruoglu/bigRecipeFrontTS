@@ -1,17 +1,17 @@
 import { History } from 'history';
 import categoryActionsTypes from './categoryActionsTypes';
-import { Category } from './interface';
-import { Id } from '../common/interface';
+import { ICategory } from './interface';
+import {IAction, Id} from '../common/interface';
 
-export const getCategories = () => ( { type: categoryActionsTypes.FETCH_CATEGORY_SAGA } );
-export const getById = ( id: Id ) => ( {
+export const getCategories = (): IAction<ICategory> => ( { type: categoryActionsTypes.FETCH_CATEGORY_SAGA } );
+export const getById = ( id: Id ): IAction<ICategory> => ( {
   type: categoryActionsTypes.GET_BY_ID,
   payload: {
     id,
   },
 } );
 
-export const editCategories = ( id: Id, data: Category, history: History ) => ( {
+export const editCategories = (id: Id, data: ICategory, history: History ): IAction<ICategory> => ( {
   type: categoryActionsTypes.EDIT_CATEGORY,
   payload: {
     data,
@@ -20,14 +20,14 @@ export const editCategories = ( id: Id, data: Category, history: History ) => ( 
   },
 } );
 
-export const deleteCategory = ( id: Id ) => ( {
+export const deleteCategory = ( id: Id ): IAction<ICategory> => ( {
   type: categoryActionsTypes.DELETE_CATEGORY,
   payload: {
     id,
   },
 } );
 
-export const addCategory = ( data: Category, history: History ) => ( {
+export const addCategory = (data: ICategory, history: History ): IAction<ICategory> => ( {
   type: categoryActionsTypes.ADD_CATEGORY,
   payload: {
     data,

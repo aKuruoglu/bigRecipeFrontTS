@@ -1,8 +1,15 @@
-import React from 'react';
+import React, {FC} from 'react';
 import PropTypes from 'prop-types';
 import { Button, Modal } from 'react-bootstrap';
 
-const DeleteModal = ( {
+interface Props {
+  entity: string;
+  open: boolean;
+  handleDelete: () => void;
+  handleClose: () => void;
+}
+
+const DeleteModal: FC<Props> = ( {
   entity, open, handleDelete, handleClose,
 } ) => (
   <Modal show={ open } onHide={ handleClose }>
@@ -29,12 +36,5 @@ const DeleteModal = ( {
     </Modal.Footer>
   </Modal>
 );
-
-DeleteModal.propTypes = {
-  entity: PropTypes.string.isRequired,
-  open: PropTypes.bool.isRequired,
-  handleDelete: PropTypes.func.isRequired,
-  handleClose: PropTypes.func.isRequired,
-};
 
 export default DeleteModal;

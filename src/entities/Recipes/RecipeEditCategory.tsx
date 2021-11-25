@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import PropTypes from 'prop-types';
+import React, {FC, useState} from 'react';
 import { connect } from 'react-redux';
 import { useHistory, useParams, useRouteMatch } from 'react-router-dom';
 
@@ -11,43 +10,57 @@ import WrapSimple from '../../components/WrapSimple';
 import EditModal from '../../components/modals/EditModal';
 import useKeysChain from '../../utils/useKeysChain';
 import useGetById from '../../utils/useGetById';
+import { IRecipe } from "../../redux/recipe/interface";
+import { IAction, Id, Ids } from "../../redux/common/interface";
+import { BreadTree } from "../../redux/category/interface";
+import { RootState } from "../../redux/rootReducer";
 
-const RecipeEditCategory = ( {
+interface RecipeEditCategoryProps {
+  currentRecipe: IRecipe | null,
+  getByIdCall: ( id: Id  ) => IAction<IRecipe>,
+  crumbsMap: BreadTree,
+  updateRecipeCategoryCall: ( {}: Ids ) => IAction<IRecipe>;
+}
+
+const RecipeEditCategory: FC<RecipeEditCategoryProps> = ( {
   currentRecipe,
   getByIdCall,
   crumbsMap,
-  updateRecipeCategoryCall,
-  currentRecipeInStore,
+  updateRecipeCategoryCall
 } ) => {
-  const { id } = useParams();
+  const { id }: { id: Id } = useParams();
   const history = useHistory();
 
   const { path } = useRouteMatch();
-  const entity = path.split( '/' );
+  const entity: string[] = path.split( '/' );
 
-  const [catId, setCatId] = useState( null );
+  const [catId, setCatId] = useState<Id | null>( null );
 
   useGetById( id, getByIdCall );
 
-  if ( !currentRecipeInStore ) {
+  if ( !currentRecipe ) {
     return null;
   }
 
   // eslint-disable-next-line react-hooks/rules-of-hooks
-  const keysChain = useKeysChain( currentRecipe.categoryId, crumbsMap );
+  const keysChain: string = useKeysChain( currentRecipe.categoryId, crumbsMap );
 
   if ( !keysChain ) {
     return null;
   }
 
   const handleClose = () => setCatId( null );
-  const handleShow = ( { key } ) => setCatId( key );
+  const handleShow = ( { key }: { key: Id } ) => setCatId( key );
 
   const handleEditCategory = () => {
-    const sendKey = catId
-      .split( '/' )
-      .pop();
-    updateRecipeCategoryCall( { id, catId: sendKey } );
+    let sendKey: string | undefined;
+    if (catId) {
+      sendKey = catId
+        .split( '/' )
+        .pop();
+    }
+
+    updateRecipeCategoryCall( { id, catId: sendKey! } );
     history.push( `/${ entity[1] }` );
   };
 
@@ -67,22 +80,8 @@ const RecipeEditCategory = ( {
   );
 };
 
-RecipeEditCategory.propTypes = {
-  currentRecipe: PropTypes.shape( {
-    _id: PropTypes.string,
-    title: PropTypes.string,
-    description: PropTypes.string,
-    categoryId: PropTypes.string,
-  } ).isRequired,
-  currentRecipeInStore: PropTypes.bool.isRequired,
-  crumbsMap: PropTypes.objectOf( PropTypes.object ).isRequired,
-  getByIdCall: PropTypes.func.isRequired,
-  updateRecipeCategoryCall: PropTypes.func.isRequired,
-};
-
-export default connect( ( state ) => ( {
-  currentRecipe: state.recipe.recipeById ? state.recipe.recipeById : {},
-  currentRecipeInStore: !!state.recipe.recipeById,
+export default connect( ( state: RootState ) => ( {
+  currentRecipe: state.recipe.recipeById,
   crumbsMap: state.category.breadCrumbsTree,
 } ), {
   getByIdCall: getById,

@@ -1,8 +1,7 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { FC } from 'react';
 import { useHistory } from 'react-router-dom';
 
-const WrapSimple = ( { children } ) => {
+const WrapSimple: FC = ( { children } ) => {
   const history = useHistory();
 
   const goBack = () => {
@@ -17,17 +16,10 @@ const WrapSimple = ( { children } ) => {
         <span onClick={ goBack } className="arrowBack">
           <i className="fas fa-arrow-left" />
         </span>
-        {children}
+        { children }
       </main>
     </div>
   );
-};
-
-WrapSimple.propTypes = {
-  children: PropTypes.oneOfType( [
-    PropTypes.element,
-    PropTypes.arrayOf( PropTypes.element ),
-  ] ).isRequired,
 };
 
 export default WrapSimple;

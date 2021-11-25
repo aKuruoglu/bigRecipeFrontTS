@@ -1,10 +1,10 @@
 /* eslint-disable no-param-reassign */
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Recipe } from './interface';
+import { IAllRecipe, IRecipe } from './interface';
 
 interface InitialState {
-  allRecipes: Recipe[] | null,
-  recipeById: Recipe | null,
+  allRecipes: IAllRecipe | null,
+  recipeById: IRecipe | null,
   requestStatus: string,
 }
 
@@ -18,10 +18,10 @@ export const recipeSlice = createSlice( {
   name: 'recipe',
   initialState,
   reducers: {
-    setAllRecipes: ( state, { payload }: PayloadAction<Recipe[]> ) => {
+    setAllRecipes: ( state, { payload }: PayloadAction<IAllRecipe | null> ) => {
       state.allRecipes = payload;
     },
-    setRecipeById: ( state, { payload }: PayloadAction<Recipe | null> ) => {
+    setRecipeById: ( state, { payload }: PayloadAction<IRecipe | null> ) => {
       state.recipeById = payload;
     },
     changeRequestStatus: ( state, { payload }: PayloadAction<string> ) => {

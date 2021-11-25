@@ -3,13 +3,13 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 // @ts-ignore
 import { cloneDeep } from 'lodash';
 import { buildCategoryTree, replaceKeysDeep } from '../../utils/utils';
-import { Category, ICategoryTree, BreadTree } from './interface';
+import { ICategory, ICategoryTree, BreadTree } from './interface';
 
 interface InitialState {
-  categories: Category[];
+  categories: ICategory[];
   categoriesTree: ICategoryTree[];
   breadCrumbsTree: BreadTree;
-  categoryById: Category | null;
+  categoryById: ICategory | null;
 }
 
 const initialState: InitialState = {
@@ -23,19 +23,19 @@ export const categorySlice = createSlice( {
   name: 'category',
   initialState,
   reducers: {
-    setAllCategory: ( state, { payload }: PayloadAction<Category[]> ) => {
+    setAllCategory: ( state, { payload }: PayloadAction<ICategory[]> ) => {
       state.categories = payload;
-      const cloneCategories: Category[] = cloneDeep( state.categories );
+      const cloneCategories: ICategory[] = cloneDeep( state.categories );
       const instead = { _id: 'key', name: 'label', children: 'nodes' };
       const tree: ICategoryTree[] = buildCategoryTree( payload );
       state.categoriesTree = replaceKeysDeep( tree, instead );
-      const crumbs: Category[] = buildCategoryTree( cloneCategories, false );
-      state.breadCrumbsTree = crumbs.reduce( ( mask: BreadTree, item: Category ) => ( {
+      const crumbs: ICategory[] = buildCategoryTree( cloneCategories, false );
+      state.breadCrumbsTree = crumbs.reduce( ( mask: BreadTree, item: ICategory ) => ( {
         ...mask,
         [item._id]: item,
       } ), {} );
     },
-    setCategoryById: ( state, { payload }: PayloadAction<Category> ) => {
+    setCategoryById: ( state, { payload }: PayloadAction<ICategory> ) => {
       state.categoryById = payload;
     },
   },

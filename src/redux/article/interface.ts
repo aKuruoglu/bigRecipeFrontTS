@@ -1,9 +1,9 @@
-export interface IArticle {
-  _id: string;
-  title: string;
+import {Id, IGeneralItem} from "../common/interface";
+
+export interface IArticle extends IGeneralItem {
   description: string;
   mainText: string;
-  categoryId?: string;
+  categoryId?: Id;
 }
 
 export interface IAllArticles {

@@ -1,7 +1,7 @@
 import { store } from 'react-notifications-component';
 
 class Notification {
-  error ( message ) {
+  error ( message: string ) {
     return store.addNotification( {
       message,
       type: 'danger',
@@ -16,7 +16,7 @@ class Notification {
     } );
   }
 
-  success ( message ) {
+  success ( message: string ) {
     return store.addNotification( {
       message,
       type: 'success',

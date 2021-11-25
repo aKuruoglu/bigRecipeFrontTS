@@ -1,4 +1,4 @@
-import { isObject, transform, keys } from 'lodash';
+import { isObject, transform } from 'lodash';
 
 export const buildCategoryTree = ( array, tree = true ) => {
   const categoriesMap = array.reduce( ( mask, item ) => ( {
@@ -34,7 +34,6 @@ export function hasChildren ( item ) {
   if ( item.children === undefined ) {
     return false;
   }
-
   return item.children.length !== 0;
 }
 

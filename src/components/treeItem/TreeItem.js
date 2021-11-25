@@ -1,5 +1,4 @@
 import React, { useCallback, useState } from 'react';
-import PropTypes from 'prop-types';
 import { Button } from 'react-bootstrap';
 import { useHistory } from 'react-router-dom';
 import 'react-simple-tree-menu/dist/main.css';
@@ -85,40 +84,40 @@ const TreeItem = ( {
     </div>
   );
 };
-
-TreeItem.propTypes = {
-  item: PropTypes.shape( {
-    hasNodes: PropTypes.bool,
-    toggleNode: PropTypes.func,
-    key: PropTypes.string,
-    isOpen: PropTypes.bool,
-    label: PropTypes.string,
-    active: PropTypes.bool,
-    focused: PropTypes.bool,
-    index: PropTypes.number,
-    level: PropTypes.number,
-    onClick: PropTypes.func,
-    openNodes: PropTypes.arrayOf( PropTypes.string ),
-    parent: PropTypes.string,
-    parentCategoryId: PropTypes.oneOfType( [
-      PropTypes.oneOf( [null] ),
-      PropTypes.string,
-    ] ),
-  } ).isRequired,
-  deleteCategoryCall: PropTypes.func.isRequired,
-  fetchCategoryById: PropTypes.func.isRequired,
-  categoryById: PropTypes.shape( {
-    _id: PropTypes.string,
-    parentCategoryId: PropTypes.string,
-    name: PropTypes.string,
-    articlesCount: PropTypes.number,
-    recipesCount: PropTypes.number,
-  } ),
-};
-
-TreeItem.defaultProps = {
-  categoryById: {},
-};
+//
+// TreeItem.propTypes = {
+//   item: PropTypes.shape( {
+//     hasNodes: PropTypes.bool,
+//     toggleNode: PropTypes.func,
+//     key: PropTypes.string,
+//     isOpen: PropTypes.bool,
+//     label: PropTypes.string,
+//     active: PropTypes.bool,
+//     focused: PropTypes.bool,
+//     index: PropTypes.number,
+//     level: PropTypes.number,
+//     onClick: PropTypes.func,
+//     openNodes: PropTypes.arrayOf( PropTypes.string ),
+//     parent: PropTypes.string,
+//     parentCategoryId: PropTypes.oneOfType( [
+//       PropTypes.oneOf( [null] ),
+//       PropTypes.string,
+//     ] ),
+//   } ).isRequired,
+//   deleteCategoryCall: PropTypes.func.isRequired,
+//   fetchCategoryById: PropTypes.func.isRequired,
+//   categoryById: PropTypes.shape( {
+//     _id: PropTypes.string,
+//     parentCategoryId: PropTypes.string,
+//     name: PropTypes.string,
+//     articlesCount: PropTypes.number,
+//     recipesCount: PropTypes.number,
+//   } ),
+// };
+//
+// TreeItem.defaultProps = {
+//   categoryById: {},
+// };
 
 export default connect( ( state ) => ( {
   categoryById: state.category.categoryById ? state.category.categoryById : {},

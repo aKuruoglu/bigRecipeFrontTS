@@ -14,7 +14,7 @@ export interface CategoryTreeProps {
 }
 
 const CategoryTree: FC<CategoryTreeProps> = ( { categoryTree, initialActiveKey, onClickItem } ) => {
-  const [tree, setTree] = useState<ReactNode>( null );
+  const [tree, setTree] = useState<ReactNode | null>( null );
 
   useEffect( () => {
     let options = {};

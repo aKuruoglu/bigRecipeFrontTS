@@ -39,7 +39,7 @@ const ArticleEditCategory: FC<ArticleEditCategoryProps> = ( {
   }
 
   // eslint-disable-next-line react-hooks/rules-of-hooks
-  const keysChain = useKeysChain( currentArticle.categoryId, crumbsMap );
+  const keysChain = useKeysChain( currentArticle.categoryId!, crumbsMap );
 
   if ( !keysChain ) {
     return null;

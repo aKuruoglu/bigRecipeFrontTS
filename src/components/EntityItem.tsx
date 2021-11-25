@@ -1,18 +1,24 @@
-import React, { useState } from 'react';
-import PropTypes from 'prop-types';
+import React, {FC, useState, PropsWithChildren} from 'react';
 import {
   ButtonGroup, DropdownButton, Dropdown,
 } from 'react-bootstrap';
 import { useHistory } from 'react-router-dom';
 import DeleteModal from './modals/DeleteModal';
+import {deleteEntityType, IGeneralItem} from "../redux/common/interface";
 
-const EntityItem = ( {
+interface EntityItemProps<T> {
+  item: T;
+  deleteEntityCall: deleteEntityType<T>
+  entity: string
+}
+
+const EntityItem = <T1 extends IGeneralItem>( {
   item, deleteEntityCall, entity,
-} ) => {
+}: PropsWithChildren<EntityItemProps<T1>>) => {
   const history = useHistory();
   const [show, setShow] = useState( false );
 
-  const moveToEntityDetails = ( id ) => {
+  const moveToEntityDetails = ( id: string ) => {
     history.push( `/${ entity }/${ id }` );
   };
   const moveChangeCategory = () => {
@@ -60,11 +66,6 @@ const EntityItem = ( {
       </div>
     </div>
   );
-};
-
-EntityItem.propTypes = {
-  deleteEntityCall: PropTypes.func.isRequired,
-  entity: PropTypes.string.isRequired,
 };
 
 export default EntityItem;

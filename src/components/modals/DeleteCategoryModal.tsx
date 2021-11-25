@@ -1,8 +1,15 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, {FC} from 'react';
 import { Button, Modal } from 'react-bootstrap';
+import { ICategory } from "../../redux/category/interface";
 
-const DeleteCategoryModal = ( {
+interface Props {
+  currentCategory: ICategory;
+  show: boolean;
+  handleClose: () => void;
+  handleDelete: () => void;
+}
+
+const DeleteCategoryModal: FC<Props> = ( {
   currentCategory, show, handleClose, handleDelete,
 } ) => (
   <Modal show={ show } onHide={ handleClose }>
@@ -36,18 +43,5 @@ const DeleteCategoryModal = ( {
     </Modal.Footer>
   </Modal>
 );
-
-DeleteCategoryModal.propTypes = {
-  currentCategory: PropTypes.shape( {
-    _id: PropTypes.string,
-    parentCategoryId: PropTypes.string,
-    name: PropTypes.string,
-    articleCount: PropTypes.number,
-    recipeCount: PropTypes.number,
-  } ).isRequired,
-  show: PropTypes.bool.isRequired,
-  handleClose: PropTypes.func.isRequired,
-  handleDelete: PropTypes.func.isRequired,
-};
 
 export default DeleteCategoryModal;

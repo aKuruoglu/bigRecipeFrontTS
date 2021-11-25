@@ -14,7 +14,7 @@ import {RootState} from '../redux/rootReducer';
 interface WrapMainProps {
   crumbsMap?: BreadTree;
   entity: string;
-  children?: ReactNode | ReactElement
+  children: ReactElement | ReactNode;
 }
 
 const WrapMain: FC<WrapMainProps> = ( {
@@ -32,7 +32,11 @@ const WrapMain: FC<WrapMainProps> = ( {
     history.push( `/${ entity }/category/${ sendKey }` );
   }, [entity, history] );
 
-  const keysChain = useKeysChain( catId, crumbsMap );
+  let keysChain: string = '';
+
+  if (crumbsMap) {
+    keysChain = useKeysChain( catId, crumbsMap );
+  }
 
   return (
     <div className="container-md h-100">

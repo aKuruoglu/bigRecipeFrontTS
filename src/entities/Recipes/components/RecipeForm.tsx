@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {FC} from 'react';
 import PropTypes from 'prop-types';
 import { Field, Form } from 'react-final-form';
 import { Button } from 'react-bootstrap';
@@ -6,9 +6,17 @@ import { connect } from 'react-redux';
 import { useParams, useRouteMatch } from 'react-router-dom';
 import SelectCategory from '../../../components/forms/SelectCategory';
 import Input from '../../../components/forms/Input';
+import { IRecipe } from "../../../redux/recipe/interface";
+import { Id } from "../../../redux/common/interface";
+import { RootState } from "../../../redux/rootReducer";
 
-const RecipeForm = ( { currentRecipe, onSubmit } ) => {
-  const { id } = useParams();
+interface RecipeForm {
+  currentRecipe?: IRecipe | null
+  onSubmit: ( {}: IRecipe ) => void
+}
+
+const RecipeForm: FC<RecipeForm> = ( { currentRecipe, onSubmit } ) => {
+  const { id }: { id: Id } = useParams();
   const isAddRecipe = useRouteMatch( '/recipe/add' );
 
   return (
@@ -16,7 +24,7 @@ const RecipeForm = ( { currentRecipe, onSubmit } ) => {
       onSubmit={ onSubmit }
       initialValues={ { ...currentRecipe } }
       validate={ ( values ) => {
-        const errors = {};
+        const errors: { [key: string]: string } = {};
         if ( !values.title ) {
           errors.title = 'Required';
         }
@@ -34,11 +42,11 @@ const RecipeForm = ( { currentRecipe, onSubmit } ) => {
         <form onSubmit={ handleSubmit }>
           <div className="mb-3">
             <label htmlFor="title">Title</label>
-            <Field name="title" component={ Input } defaultValue={ currentRecipe.title } />
+            <Field name="title" component={ Input } defaultValue={ currentRecipe!.title } />
           </div>
           <div className="mb-3">
             <label htmlFor="description">Description</label>
-            <Field name="description" component={ Input } defaultValue={ currentRecipe.description } />
+            <Field name="description" component={ Input } defaultValue={ currentRecipe!.description } />
           </div>
           {!id && (
           <div className="mb-3  align-items-center">
@@ -52,19 +60,19 @@ const RecipeForm = ( { currentRecipe, onSubmit } ) => {
   );
 };
 
-RecipeForm.propTypes = {
-  currentRecipe: PropTypes.shape( {
-    _id: PropTypes.string,
-    title: PropTypes.string,
-    description: PropTypes.string,
-  } ),
-  onSubmit: PropTypes.func.isRequired,
-};
+// RecipeForm.propTypes = {
+//   currentRecipe: PropTypes.shape( {
+//     _id: PropTypes.string,
+//     title: PropTypes.string,
+//     description: PropTypes.string,
+//   } ),
+//   onSubmit: PropTypes.func.isRequired,
+// };
+//
+// RecipeForm.defaultProps = {
+//   currentRecipe: {},
+// };
 
-RecipeForm.defaultProps = {
-  currentRecipe: {},
-};
-
-export default connect( ( state ) => ( {
+export default connect( ( state: RootState ) => ( {
   categories: state.category.categories,
 } ) )( RecipeForm );

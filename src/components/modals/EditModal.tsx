@@ -1,8 +1,13 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { FC } from 'react';
 import { Button, Modal } from 'react-bootstrap';
 
-const EditModal = ( { catId, handleClose, handleEdit } ) => (
+interface Props {
+  catId: boolean;
+  handleClose: () => void;
+  handleEdit: () => void;
+}
+
+const EditModal: FC<Props> = ( { catId, handleClose, handleEdit } ) => (
   <Modal show={ !!catId } onHide={ handleClose }>
     <Modal.Header closeButton>
       <Modal.Title>Editing recipe</Modal.Title>
@@ -18,11 +23,5 @@ const EditModal = ( { catId, handleClose, handleEdit } ) => (
     </Modal.Footer>
   </Modal>
 );
-
-EditModal.propTypes = {
-  catId: PropTypes.bool.isRequired,
-  handleEdit: PropTypes.func.isRequired,
-  handleClose: PropTypes.func.isRequired,
-};
 
 export default EditModal;

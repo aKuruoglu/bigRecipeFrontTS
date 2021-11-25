@@ -1,5 +1,4 @@
-import React, { useEffect } from 'react';
-import PropTypes from 'prop-types';
+import React, { FC, ReactElement, ReactNode, useEffect } from 'react';
 import { connect } from 'react-redux';
 import ReactNotification from 'react-notifications-component';
 import 'react-notifications-component/dist/theme.css';
@@ -7,8 +6,17 @@ import 'react-notifications-component/dist/theme.css';
 import NavBar from './NavBar';
 import { getCategories } from '../redux/category/action';
 import Loader from './loader/Loader';
+import {IAction} from "../redux/common/interface";
+import {ICategory} from "../redux/category/interface";
+import {RootState} from "../redux/rootReducer";
 
-const WrapComponent = ( { children, getCategoriesCall, ifLoading } ) => {
+interface WrapComponentProps {
+  getCategoriesCall: () => IAction<ICategory>;
+  ifLoading: boolean;
+  children: ReactElement | ReactNode
+}
+
+const WrapComponent: FC<WrapComponentProps> = ( { children, getCategoriesCall, ifLoading } ) => {
   useEffect( () => {
     getCategoriesCall();
   }, [getCategoriesCall] );
@@ -16,18 +24,14 @@ const WrapComponent = ( { children, getCategoriesCall, ifLoading } ) => {
     <Loader ifLoading={ ifLoading }>
       <NavBar />
       <ReactNotification />
-      { children }
+      <>
+        { children }
+      </>
     </Loader>
   );
 };
 
-WrapComponent.propTypes = {
-  getCategoriesCall: PropTypes.func.isRequired,
-  ifLoading: PropTypes.bool.isRequired,
-  children: PropTypes.element.isRequired,
-};
-
-export default connect( ( state ) => ( {
+export default connect( ( state: RootState ) => ( {
   ifLoading: state.common.ifLoading,
 } ),
 {

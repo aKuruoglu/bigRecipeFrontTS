@@ -1,7 +1,7 @@
-import React, { useEffect } from 'react';
+import React, {FC, useEffect} from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { get } from 'lodash';
+import get from 'lodash-ts/get';
 import { Button } from 'react-bootstrap';
 import ReactPaginate from 'react-paginate';
 import { useHistory, useParams } from 'react-router-dom';
@@ -14,12 +14,31 @@ import {
   deleteRecipe, getAllRecipes, getRecipesByCategory,
 } from '../../redux/recipe/actions';
 import { changeRequestStatus, cleanStoreRecipes } from '../../redux/recipe/slice';
+import {
+  deleteEntityType,
+  getAllEntityType,
+  getArticleByCategoryType,
+  IAllEntities,
+  Id,
+  Pagination
+} from "../../redux/common/interface";
+import { IRecipe } from "../../redux/recipe/interface";
+import { RootState } from "../../redux/rootReducer";
 
-const Recipe = ( {
+interface RecipeProps {
+  allRecipeCall: getAllEntityType<IRecipe>,
+  getRecipesByCategoryCall: getArticleByCategoryType<IRecipe>,
+  allRecipes: IAllEntities<IRecipe> | null,
+  deleteRecipeCall: deleteEntityType<IRecipe>,
+  cleanStoreRecipesCall: () => void,
+  status: string,
+  changeStatus: (str: string) => void,
+}
+
+const Recipe: FC<RecipeProps> = ( {
   allRecipeCall,
   getRecipesByCategoryCall,
   allRecipes,
-  allRecipesInStore,
   deleteRecipeCall,
   cleanStoreRecipesCall,
   status,
@@ -27,12 +46,12 @@ const Recipe = ( {
 } ) => {
   const history = useHistory();
   const name = 'recipe';
-  const { catId, page = 1 } = useParams();
+  const { catId, page = '1' }: { catId: string, page: string } = useParams();
 
-  const currentPage = +page - 1;
+  const currentPage: number = +page - 1;
 
-  const changePage = ( { selected } ) => {
-    const pageNumber = +selected + 1;
+  const changePage = ( { selected }: { selected: number } ) => {
+    const pageNumber: number = +selected + 1;
     if ( pageNumber !== +page ) {
       if ( !catId ) {
         history.push( `/${ name }/page/${ pageNumber }` );
@@ -54,23 +73,23 @@ const Recipe = ( {
 
     if ( !catId ) {
       allRecipeCall( {
-        page: currentPage,
-        limit: pageLimit,
+        page: currentPage.toString(),
+        limit: pageLimit!,
       } );
     } else {
-      getRecipesByCategoryCall( catId, { page: currentPage, limit: pageLimit } );
+      getRecipesByCategoryCall( catId, { page: currentPage.toString(), limit: pageLimit! } );
     }
   }, [allRecipeCall, catId, getRecipesByCategoryCall, currentPage, status, changeStatus] );
 
-  if ( !allRecipesInStore ) {
+  if ( !allRecipes ) {
     return null;
   }
 
-  const { entities, total } = allRecipes;
+  const { entities, total }: IAllEntities<IRecipe> = allRecipes;
 
-  let pageCount;
+  let pageCount: number;
   if ( total > 10 ) {
-    pageCount = Math.ceil( total / pageLimit - 1 );
+    pageCount = Math.ceil( total / +pageLimit! - 1 );
   } else {
     pageCount = 1;
   }
@@ -88,7 +107,7 @@ const Recipe = ( {
               key={ item._id }
               entity={ name }
               deleteEntityCall={ deleteRecipeCall }
-              cleanStoreEntityCall={ cleanStoreRecipesCall }
+              // cleanStoreEntityCall={ cleanStoreRecipesCall }
             />
           ) )
           : <p className="text-center mb-5">Data do not exist</p>}
@@ -114,28 +133,8 @@ const Recipe = ( {
   );
 };
 
-Recipe.propTypes = {
-  allRecipes: PropTypes.shape( {
-    entities: PropTypes.arrayOf( PropTypes.shape( {
-      _id: PropTypes.string,
-      title: PropTypes.string,
-      description: PropTypes.string,
-      categoryId: PropTypes.string,
-    } ) ),
-    total: PropTypes.number,
-  } ).isRequired,
-  allRecipesInStore: PropTypes.bool.isRequired,
-  status: PropTypes.string.isRequired,
-  allRecipeCall: PropTypes.func.isRequired,
-  getRecipesByCategoryCall: PropTypes.func.isRequired,
-  deleteRecipeCall: PropTypes.func.isRequired,
-  cleanStoreRecipesCall: PropTypes.func.isRequired,
-  changeStatus: PropTypes.func.isRequired,
-};
-
-export default connect( ( state ) => ( {
-  allRecipes: state.recipe.allRecipes ? state.recipe.allRecipes : {},
-  allRecipesInStore: !!state.recipe.allRecipes,
+export default connect( ( state: RootState ) => ( {
+  allRecipes: state.recipe.allRecipes,
   status: state.recipe.requestStatus,
 } ), {
   allRecipeCall: getAllRecipes,
